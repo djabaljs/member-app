@@ -1,0 +1,540 @@
+{% extends "admin_template.html.twig" %}
+{% block title %}{{ parent() }}-TELEPHONIQUE{% endblock %}
+{% block head %}
+{% block stylesheets %}
+
+{% endblock %}
+{% endblock %}
+{% block body %}
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">Dashboard</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Agents</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+
+<div class="container-fluid">
+    <div class="box-header">
+        <h3 class="box-title">
+            <div class="btn-group">
+                <button type="button" class="btn btn-block btn-success add_agent"><i
+                        class="glyphicon glyphicon-save"></i>
+                    Créer</button>
+            </div>
+        </h3>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-outline card-info">
+                <div class="">
+                    <div class="card-header">
+                        <h3 class="card-title">Liste des agents</h3>
+                    </div>
+
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
+                                <th>Postes</th>
+                                <th>Fonctions</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-content">
+                            {% for agent in  agents %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ agent.firstname }}</td>
+                                <td>{{ agent.lastname }}</td>
+                                <td>{{ agent.email }}</td>
+                                <td>{{ agent.post }}</td>
+                                <td>{{ agent.fonction }}</td>
+                                <td>
+                                    <a type="submit" id="btn-modify-{{agent.id}}"
+                                        class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+                                    <a type="submit" class="btn btn-danger btn-sm"  data-toggle="modal"
+                                        data-target="#modal-danger">Supprimer 
+                                        <i class="fa fa-trash"></i></a>
+
+                                </td>
+                            </tr>
+                             <div id="modal-eye-{{ agent.id }}" class="modal fade" id="form" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header border-bottom-0">
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Créer un utilisateur</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {{ agent.id }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="modal_agent_edit_{{agent.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header border-bottom-0">
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter un agent</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="modal-body">
+                                        <form id="edit_agent">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="firstname">Nom</label>
+                                                        <input type="text" name="firstName" class="form-control" value="{{agent.firstName}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="lastname">Prénom</label>
+                                                        <input type="text" name="lastName" class="form-control" value="{{agent.lastName}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="email">Email</label>
+                                                     <input type="text" name="email" class="form-control" value="{{agent.email}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="post">N° poste</label>
+                                                     <input type="text" name="post" class="form-control" value="{{agent.post}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="entity">Entité</label>
+                                                         <select class="form-control" id="entity" name="entity">
+                                                            {% for entity in entities %}
+                                                             {% if entity.id == agent.entity.id %}
+                                                             <option value="{{entity.id}}" selected>{{entity.name}}</option>
+                                                             {% else %}
+                                                             <option value="{{entity.id}}" >{{entity.name}}</option>
+                                                               {% endif %}
+                                                         {% endfor %}
+                                                         </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="unit">Unité</label>
+                                                          <select class="form-control" id="unit" name="unit">
+                                                            {% for unit in units %}
+                                                             {% if unit.id == agent.unit.id %}
+                                                             <option value="{{unit.id}}" selected>{{unit.name}}</option>
+                                                             {% else %}
+                                                             <option value="{{unit.id}}" >{{unit.name}}</option>
+                                                            {% endif %}
+                                                         {% endfor %}
+                                                         </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="direction">Direction</label>
+                                                        <select class="form-control" id="direction" name="direction">
+                                                                {% for direction in directions %}
+                                                                {% if direction.id == agent.direction.id %}
+                                                                <option value="{{direction.id}}" selected>{{direction.name}}</option>
+                                                                {% else %}
+                                                                <option value="{{direction.id}}" >{{direction.name}}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="department">Département</label>
+                                                                <select class="form-control" id="department" name="department">
+                                                                {% for department in departments %}
+                                                                {% if department.id == agent.department.id %}
+                                                                <option value="{{department.id}}" selected>{{department.name}}</option>
+                                                                {% else %}
+                                                                <option value="{{department.id}}" >{{department.name}}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="form-group">
+                                                        <label for="fonction">Fonction</label>
+                                                          <select class="form-control" id="fonction" name="fonction">
+                                                                {% for fonction in fonctions %}
+                                                                {% if fonction.id == agent.fonction.id %}
+                                                                <option value="{{fonction.id}}" selected>{{fonction.name}}</option>
+                                                                {% else %}
+                                                                <option value="{{fonction.id}}" >{{fonction.name}}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="agent" value="{{agent.id}}">
+                                         </form>
+                                        </div>
+                                        <div class="modal-footer border-top-0 d-flex justify-content-center">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                            <button type="submit" id="edit-btn-{{agent.id}}" class="btn btn-warning">Modifier</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.col-->
+   <div id="modal_agent" class="modal fade" id="form" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter un agent</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(form, {attr:{'id':'add_agent_form' }})
+            }}
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="administrator_lastname">Nom</label>
+                            {{ form_row(form.firstName, {attr:{'class':'form-control','placeholder':'Nom' }})
+                            }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="administrator_lastname">Prénom</label>
+                            {{ form_row(form.lastName, {attr:{'class':'form-control','placeholder':'Prénom' }})
+                            }}
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="administrator_lastname">Email</label>
+                            {{ form_row(form.email, {attr:{'class':'form-control','placeholder':'Email' }})
+                            }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="administrator_lastname">N° poste</label>
+                            {{ form_row(form.post, {attr:{'class':'form-control','placeholder':'N° poste' }})
+                            }}
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="administrator_lastname">Entité</label>
+                            {{ form_row(form.entity, {attr:{'class':'form-control','placeholder':'Entité' }})
+                            }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="administrator_lastname">Unité</label>
+                            {{ form_row(form.unit, {attr:{'class':'form-control','placeholder':'Unité' }})
+                            }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="administrator_lastname">Direction</label>
+                            {{ form_row(form.direction, {attr:{'class':'form-control','placeholder':'Direction' }})
+                            }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="administrator_lastname">Département</label>
+                            {{ form_row(form.department, {attr:{'class':'form-control','placeholder':'Département' }})
+                            }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="administrator_lastname">Fonction</label>
+                            {{ form_row(form.fonction, {attr:{'class':'form-control','placeholder':'Service' }})
+                            }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-success register">Enregistrer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script src=" {{ asset("js/validate.js") }}"></script>
+<script src="{{ asset("js/sweetAlert.js") }}"></script>
+<script>
+    $('.add_agent').click(function () {
+        $('#modal_agent').modal('show');
+    })
+
+    $( "[id^='btn-modify']" ).click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(11, 12);
+        $('#modal_agent_edit_'+subStr).modal('show');
+    })
+    $('#modal_agen_edit').modal('hide');
+    $('[id^=entity]').change(function () {
+        var unitSelector = $(this);
+        
+        // Request the neighborhoods of the selected city.
+        $.ajax({
+            url: "{{ path('get_units_from_entity') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                entityId: unitSelector.val()
+            },
+            success: function (units) {
+                var unitSelector = $("[id^=unit]");
+                var directionSelector = $("#direction");
+                var departementSelector = $("#department");
+                var fonctionSelector = $("#fonction");
+                // Remove current options
+                directionSelector.html('Selectionner une direction...');
+                departementSelector.html('Selectionner un département...');
+                fonctionSelector.html('Selectionner une fonction...');
+                // Remove current options
+                unitSelector.html('');
+                
+                // Empty value ...
+                unitSelector.append('<option value> Selectionnner une unite de ' + unitSelector.find("option:selected").text() + ' ...</option>');
+                
+                
+                $.each(units, function (key, unit) {
+                    unitSelector.append('<option value="' + unit.id + '">' + unit.name + '</option>');
+                });
+            },
+            error: function (err) {
+                alert("An error ocurred while loading data ...");
+            }
+        });
+    });
+
+    $('[id^=unit]').change(function () {
+        var directionSelector = $(this);
+        
+        // Request the neighborhoods of the selected city.
+        $.ajax({
+            url: "{{ path('get_directions_from_unit') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                unitId: directionSelector.val()
+            },
+            success: function (directions) {
+                var directionSelector = $("[id^=direction]");
+                var departementSelector = $("#department");
+                var fonctionSelector = $("#fonction");
+                // Remove current options
+                directionSelector.html('Selectionner une direction...');
+                departementSelector.html('Selectionner une département...');
+                fonctionSelector.html('Selectionner une fonction...');
+                
+                // Empty value ...
+                directionSelector.append('<option value> Selectionnner une direction de ' + directionSelector.find("option:selected").text() + ' ...</option>');
+                
+                
+                $.each(directions, function (key, direction) {
+                    directionSelector.append('<option value="' + direction.id + '">' + direction.name + '</option>');
+                });
+            },
+            error: function (err) {
+                alert("An error ocurred while loading data ...");
+            }
+        });
+    });
+
+     $('[id^=direction]').change(function () {
+        var departmentSelector = $(this);
+        
+        // Request the neighborhoods of the selected city.
+        $.ajax({
+            url: "{{ path('get_departments_from_direction') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                directionId: departmentSelector.val()
+            },
+            success: function (departments) {
+                var departmentSelector = $("[id^=department]");
+
+                // Remove current options
+                departmentSelector.html('');
+                
+                // Empty value ...
+                departmentSelector.append('<option value> Selectionnner un département de ' + departmentSelector.find("option:selected").text() + ' ...</option>');
+                
+                
+                $.each(departments, function (key, department) {
+                    departmentSelector.append('<option value="' + department.id + '">' + department.name + '</option>');
+                });
+            },
+            error: function (err) {
+                alert("An error ocurred while loading data ...");
+            }
+        });
+
+         $('[id^=department]').change(function () {
+        var serviceSelector = $(this);
+        
+        // Request the neighborhoods of the selected city.
+        $.ajax({
+            url: "{{ path('get_services_from_department') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                departmentId: serviceSelector.val()
+            },
+            success: function (services) {
+                var serviceSelector = $("[id^=fonction]");
+
+                // Remove current options
+                serviceSelector.html('');
+                
+                // Empty value ...
+                serviceSelector.append('<option value> Selectionnner une fonction de ' + serviceSelector.find("option:selected").text() + ' ...</option>');
+                
+                $.each(services, function (key, service) {
+                    serviceSelector.append('<option value="' + service.id + '">' + service.name + '</option>');
+                });
+            },
+            error: function (err) {
+                alert("An error ocurred while loading data ...");
+            }
+        });
+        });
+
+        
+    	$.validator.setDefaults({
+		errorClass: 'help-block',
+		errorPlacement: function (error, element) {
+			error.addClass("label");
+			error.css("background", "red", );
+			error.insertAfter(element.parent());
+		},
+		highlight: function (element, errorClass, validClass) {
+			$(element).parents(".row").addClass(errorClass);
+		},
+		unhighlight: function (element, errorClass, validClass) {
+			$(element).parent().next().remove();
+
+		}
+	});
+
+		$.validator.setDefaults({
+			debug: true,
+			success: "valid"
+		});
+
+
+        $('.register').click(function (e) {
+        e.preventDefault();
+        if ($('#add_agent_form').valid()) {
+            $.ajax({
+                url: '{{ path("agents") }}',
+                method: 'POST',
+                data: $('#add_agent_form').serialize(),
+                success: function (response) {
+                    if (response.agent) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Agent ajouté avec succès'
+                        });
+                        
+                         $.post($('#add_agent_form').attr('action'), function (
+                            response) {
+                            $('#table-content').replaceWith($(response).find(
+                                '#table-content'));
+                        });
+                        $('#add_agent_form').trigger('reset');
+                    }
+                }
+            })
+        }
+    })
+    });
+
+    $("[id^=edit-btn]").click(function(){
+        var str = $(this).attr("id");
+        var agentId = str.substr(9, 10);
+    
+    })
+    
+</script>
+{% endblock %}

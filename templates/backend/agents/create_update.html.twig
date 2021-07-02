@@ -1,0 +1,208 @@
+{% extends "admin_template.html.twig" %}
+{% block title %}{{ parent() }}-AGENTS{% endblock %}
+{% block head %}
+
+{% block stylesheets %}
+<style type="text/css">
+
+</style>
+
+{% endblock %}
+{% endblock %}
+{% block body %}
+<section class="content-header">
+    <h1>
+        Administrateurs
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"> Agents</a></li>
+        <li class="active">Créer</li>
+    </ol>
+</section>
+
+<div class="col-sm-12 sales">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            {{ include('backend/components/flash_message.html.twig') }}
+        </div>
+    </div>
+    <!-- general form elements -->
+    <div class="box box-primary" style="margin-top:5rem">
+
+        <div class="box-header with-border">
+            <h3 class="box-title">
+                <div class="btn-group">
+                    <a href="{{ path("agents") }}">
+                        <button type="button" class="btn btn-info"><i class="glyphicon glyphicon-list"></i>
+                            Lister</button>
+                    </a>
+                </div>
+            </h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        {{ form_start(form) }}
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-offset-2 col-md-4 col-sm-12 col-lg-4">
+                    <label for="">Nom<sup>*</sup></label>
+                    {{ form_row(form.firstname, {attr: {class: 'form-control', 'placeholder':'Nom'} }) }}
+                </div>
+                <div class="col-md-4 col-sm-12 col-lg-4">
+                    <label for="">Prénom(s)<sup>*</sup></label>
+                    {{ form_row(form.lastname, {attr: {class: 'form-control',  'placeholder':'Prénom(s)'} }) }}
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-offset-2 col-md-4 col-sm-12 col-lg-4">
+                    <label for="">Email<sup>*</sup></label>
+                    {{ form_row(form.email, {attr: {class: 'form-control', 'placeholder':'Email'} }) }}
+                    <br>
+                </div>
+                <div class="col-md-4 col-sm-12 col-lg-4">
+                    <label for="">Poste<sup>*</sup></label>
+                    {{ form_row(form.post, {attr: {class: 'form-control'} }) }}
+                    <br>
+                </div>
+            </div>
+            <br>
+              <div class="row">
+                <div class="col-md-offset-2 col-md-4 col-sm-12 col-lg-4">
+                    <label for="">Entité<sup>*</sup></label>
+                    {{ form_row(form.entity, {attr: {class: 'form-control', 'placeholder':'Entité'} }) }}
+                    <br>
+                </div>
+                <div class="col-md-4 col-sm-12 col-lg-4">
+                    <label for="">Unité<sup>*</sup></label>
+                    {{ form_row(form.unit, {attr: {class: 'form-control'} }) }}
+                    <br>
+                </div>
+            </div>
+            <br>
+              <div class="row">
+                <div class="col-md-offset-2 col-md-4 col-sm-12 col-lg-4">
+                    <label for="">Direction<sup>*</sup></label>
+                    {{ form_row(form.direction, {attr: {class: 'form-control', 'placeholder':'Direction'} }) }}
+                    <br>
+                </div>
+                <div class="col-md-4 col-sm-12 col-lg-4">
+                    <label for="">Service<sup>*</sup></label>
+                    {{ form_row(form.service, {attr: {class: 'form-control'} }) }}
+                    <br>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+
+        <div class="box-footer text-center">
+            {% if update %}
+            <button type="submit" class="btn btn-warning">Modifier</button>
+            <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#modal-danger"> <i
+                    class="glyphicon glyphicon-trash"></i> Supprimer</button>
+            {% else %}
+            <button type="submit" class="btn btn-success">Créer</button>
+            {% endif %}
+        </div>
+    </div>
+    {% if update %}
+    <div style="margin-right: 30%; margin-left: 30%">
+        <div class="btn-group">
+            <div class="modal modal-danger fade" id="modal-danger" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title"> <i class="fa fa-exclamation-triangle"> NB: La suppression est
+                                    irréversible.</i></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Voulez-vous vraiment supprimer cet agents ?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline pull-left"
+                                data-dismiss="modal">Annuler</button>
+                            <form action="" method="post" data-confirmation="true" id="delete-form">
+                                <input type="hidden" name="token" value="{{ csrf_token('delete') }}" />
+                                <button type="submit" class="btn btn-outline">Confirmer</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset("app/js/validate.js") }}"></script>
+<script src="{{ asset("app/build/js/intlTelInput.js") }}"></script>
+<script>
+    var $country = $("#administrator_country");
+    var $token = $("#administrator_token");
+
+    $country.change(function () {
+
+        var $form = $(this).closest('form');
+        var data = {};
+
+        data[$token.attr('name')] = $token.val();
+        data[$country.attr('name')] = $country.val();
+        $.post($form.attr('action'), data).then(function (response) {
+            $("#administrator_city").replaceWith($(response).find("#administrator_city"));
+        });
+
+    });
+
+
+    var input = document.querySelector("#administrator_phone");
+
+    var iti = window.intlTelInput(input, {
+
+        // allowDropdown: false,
+        // autoHideDialCode: false,
+        autoPlaceholder: "aggressive",
+        // dropdownContainer: document.body,
+        // excludeCountries: ["us"],
+        //formatOnDisplay: false,
+
+        geoIpLookup: function (callback) {
+            $.get('https://ipinfo.io', function () {}, "jsonp").always(function (resp) {
+                var countryCode = (resp && resp.country) ? resp.country : "";
+                callback(countryCode);
+            });
+        },
+        initialCountry: "auto",
+
+        //hiddenInput: "full_number",
+        //initialCountry: "ci",
+        //localizedCountries: { 'de': 'Deutschland'},
+        // nationalMode: false,
+
+        //onlyCountries:  ['cm', 'ci','gn','mv','sn','gm','rw'],
+        //placeholderNumberType: "MOBILE",
+        preferredCountries: ['cm', 'ci', 'gn', 'mv', 'sn', 'gm', 'rw'],
+        separateDialCode: true,
+        utilsScript: '/app/js/utils.js'
+
+    });
+
+    $.validator.addMethod('validePhone', function (value, element) {
+        return iti.isValidNumber();
+    }, 'Numéro de téléphone invalide.');
+
+    // update the hidden input on submit
+    $("form").submit(function (e) {
+        var countryCode = iti.selectedCountryData.dialCode;
+        var phone = $("#administrator_phone").val();
+        $("#administrator_phone").val('+' + countryCode + '' + phone);
+    });
+</script>
+
+{% endblock %}

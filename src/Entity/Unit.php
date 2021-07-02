@@ -34,9 +34,15 @@ class Unit
      */
     private $directions;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Agent::class, mappedBy="unit")
+     */
+    private $agents;
+
     public function __construct()
     {
         $this->directions = new ArrayCollection();
+        $this->agents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -101,5 +107,35 @@ class Unit
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection|Agent[]
+     */
+    public function getAgents(): Collection
+    {
+        return $this->agents;
+    }
+
+    public function addAgent(Agent $agent): self
+    {
+        if (!$this->agents->contains($agent)) {
+            $this->agents[] = $agent;
+            $agent->setUnit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAgent(Agent $agent): self
+    {
+        if ($this->agents->removeElement($agent)) {
+            // set the owning side to null (unless already changed)
+            if ($agent->getUnit() === $this) {
+                $agent->setUnit(null);
+            }
+        }
+
+        return $this;
     }
 }

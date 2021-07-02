@@ -57,6 +57,11 @@ class Agent
      */
     private $department;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Unit::class, inversedBy="agents")
+     */
+    private $unit;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -154,6 +159,18 @@ class Agent
     public function setDepartment(?Department $department): self
     {
         $this->department = $department;
+
+        return $this;
+    }
+
+    public function getUnit(): ?Unit
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(?Unit $unit): self
+    {
+        $this->unit = $unit;
 
         return $this;
     }

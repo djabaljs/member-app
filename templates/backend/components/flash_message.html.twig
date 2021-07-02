@@ -1,0 +1,8 @@
+{# ...or you can read and display every flash message available #}
+{% for type, messages in app.flashes %}
+{% for message in messages %}
+<div class="alert alert-{{ type }} text-center notify">
+    <h4><i class="fa fa-bullhorn"></i> {{ message }}</h4>
+</div>
+{% endfor %}
+{% endfor %}
