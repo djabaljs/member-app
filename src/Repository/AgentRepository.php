@@ -47,4 +47,42 @@ class AgentRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAgentByStandardCriteria($search){
+       return $this->createQueryBuilder('a')
+            ->andWhere('a.firstName LIKE :search OR a.lastName LIKE :search OR a.email LIKE :search OR a.post LIKE :search')
+            ->innerJoin('a.fonction','f')
+            ->orWhere('f.name LIKE :search')
+            ->innerJoin('f.department', 'd')
+            ->orWhere('d.name LIKE :search')
+            ->innerJoin('d.direction', 'dd')
+            ->orWhere('dd.name LIKE :search')
+            ->innerJoin('dd.unit', 'u')
+            ->orWhere('u.name LIKE :search')
+            ->innerJoin('u.entity', 'e')
+            ->orWhere('e.name LIKE :search')
+            ->setParameter('search', '%'.$search.'%')
+            ->getQuery()
+            ->getResult()
+       ;
+    }
+
+    public function findAgentBySpecificCriteria($search){
+        return $this->createQueryBuilder('a')
+             ->andWhere('a.firstName = :search OR a.lastName = :search OR a.email = :search OR a.post = :search')
+             ->innerJoin('a.fonction','f')
+             ->orWhere('f.name = :search')
+             ->innerJoin('f.department', 'd')
+             ->orWhere('d.name = :search')
+             ->innerJoin('d.direction', 'dd')
+             ->orWhere('dd.name = :search')
+             ->innerJoin('dd.unit', 'u')
+             ->orWhere('u.name = :search')
+             ->innerJoin('u.entity', 'e')
+             ->orWhere('e.name = :search')
+             ->setParameter('search', $search)
+             ->getQuery()
+             ->getResult()
+        ;
+     }
 }

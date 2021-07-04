@@ -29,7 +29,7 @@
     <div class="box-header">
         <h3 class="box-title">
             <div class="btn-group">
-                <button type="button" class="btn btn-block btn-success add_agent"><i
+                <button type="button" class="btn btn-block btn-success add_btn"><i
                         class="glyphicon glyphicon-save"></i>
                     Créer</button>
             </div>
@@ -57,7 +57,7 @@
                         </thead>
                         <tbody id="table-content">
                             {% for agent in  agents %}
-                            <tr>
+                            <tr id="tr-{{agent.id}}">
                                 <td>{{ loop.index }}</td>
                                 <td>{{ agent.firstname }}</td>
                                 <td>{{ agent.lastname }}</td>
@@ -67,39 +67,44 @@
                                 <td>
                                     <a type="submit" id="btn-modify-{{agent.id}}"
                                         class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
-                                    <a type="submit" class="btn btn-danger btn-sm"  data-toggle="modal"
+                                     <a type="submit" id="delete-{{agent.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
                                         data-target="#modal-danger">Supprimer 
                                         <i class="fa fa-trash"></i></a>
 
                                 </td>
                             </tr>
-                             <div id="modal-eye-{{ agent.id }}" class="modal fade" id="form" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal fade" id="modal_delete_{{agent.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header border-bottom-0">
-                                            <h5 class="modal-title text-center" id="exampleModalLabel">Créer un utilisateur</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{agent.firstName}} {{agent.lastName}}</h5>
+                                            <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
-                                            </button>
+                                            </a>
                                         </div>
-                                    {{ agent.id }}
+                                        <div class="modal-body">
+                                            <p>Voulez-vous vraiment supprimer {{agent.firstName}} {{agent.lastName}}? Toutes les données liées à ce agent seront définitivement supprimées!</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                                            <a id="btn-delete-{{agent.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div id="modal_agent_edit_{{agent.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
+                            <div id="modal_edit_{{agent.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header border-bottom-0">
-                                            <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter un agent</h5>
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un agent</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         
                                         <div class="modal-body">
-                                        <form id="edit_agent">
+                                        <form id="edit_form_{{agent.id}}">
                                             <div class="row">
                                                 <div class="col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-group">
@@ -225,7 +230,7 @@
     </div>
 </div>
 <!-- /.col-->
-   <div id="modal_agent" class="modal fade" id="form" tabindex="-1" role="dialog"
+   <div id="modal_add" class="modal fade" id="form" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -235,20 +240,20 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            {{ form_start(form, {attr:{'id':'add_agent_form' }})
+            {{ form_start(form, {attr:{'id':'add_form' }})
             }}
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="administrator_lastname">Nom</label>
+                            <label for="firstName">Nom</label>
                             {{ form_row(form.firstName, {attr:{'class':'form-control','placeholder':'Nom' }})
                             }}
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="administrator_lastname">Prénom</label>
+                            <label for="lastName">Prénom</label>
                             {{ form_row(form.lastName, {attr:{'class':'form-control','placeholder':'Prénom' }})
                             }}
                         </div>
@@ -257,14 +262,14 @@
                  <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="administrator_lastname">Email</label>
+                            <label for="Email">Email</label>
                             {{ form_row(form.email, {attr:{'class':'form-control','placeholder':'Email' }})
                             }}
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="administrator_lastname">N° poste</label>
+                            <label for="post">N° poste</label>
                             {{ form_row(form.post, {attr:{'class':'form-control','placeholder':'N° poste' }})
                             }}
                         </div>
@@ -273,14 +278,14 @@
                  <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="administrator_lastname">Entité</label>
+                            <label for="entity">Entité</label>
                             {{ form_row(form.entity, {attr:{'class':'form-control','placeholder':'Entité' }})
                             }}
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="administrator_lastname">Unité</label>
+                            <label for="unit">Unité</label>
                             {{ form_row(form.unit, {attr:{'class':'form-control','placeholder':'Unité' }})
                             }}
                         </div>
@@ -289,14 +294,14 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="administrator_lastname">Direction</label>
+                            <label for="direction">Direction</label>
                             {{ form_row(form.direction, {attr:{'class':'form-control','placeholder':'Direction' }})
                             }}
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="administrator_lastname">Département</label>
+                            <label for="department">Département</label>
                             {{ form_row(form.department, {attr:{'class':'form-control','placeholder':'Département' }})
                             }}
                         </div>
@@ -305,7 +310,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <label for="administrator_lastname">Fonction</label>
+                            <label for="fonction">Fonction</label>
                             {{ form_row(form.fonction, {attr:{'class':'form-control','placeholder':'Service' }})
                             }}
                         </div>
@@ -325,20 +330,290 @@
 <script src=" {{ asset("js/validate.js") }}"></script>
 <script src="{{ asset("js/sweetAlert.js") }}"></script>
 <script>
-    $('.add_agent').click(function () {
-        $('#modal_agent').modal('show');
+
+    $.validator.setDefaults({
+		errorClass: 'help-block',
+		errorPlacement: function (error, element) {
+			error.addClass("label");
+			error.css("background", "red", );
+			error.insertAfter(element.parent());
+		},
+		highlight: function (element, errorClass, validClass) {
+			$(element).parents(".row").addClass(errorClass);
+		},
+		unhighlight: function (element, errorClass, validClass) {
+			$(element).parent().next().remove();
+
+		}
+	});
+
+    $.validator.setDefaults({
+        debug: true,
+        success: "valid"
+    });
+
+
+    $('.add_btn').click(function () {
+        $('#modal_add').modal('show');
     })
 
+    function modifyFunction(){
     $( "[id^='btn-modify']" ).click(function(){
         var str = $(this).attr("id");
         var subStr = str.substr(11, 12);
-        $('#modal_agent_edit_'+subStr).modal('show');
+        $('#modal_edit_'+subStr).modal('show');
     })
-    $('#modal_agen_edit').modal('hide');
-    $('[id^=entity]').change(function () {
+    }
+
+
+    function deleteFunction(){
+    $( "[id^='delete-']" ).click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(7, 8);
+       $('#modal_delete_'+subStr).modal('show');
+    })
+    }
+    
+    $.validator.setDefaults({
+        debug: true,
+        success: "valid"
+    });
+
+    $.validator.addMethod('emailExist', function (value, element) {
+
+        $.post('{{ path("user-email", {email: "value"}) }}');
+        return console.log(value)
+    }, '');
+    var content = '';
+      $.validator.addMethod('postExist', function (value, element) {
+         
+         $.ajax({
+                url: '{{ path("user_post") }}',
+                method: 'POST',
+                data: {'post': value},
+                success: function (data) {
+                   var response = '';
+                    if(data.error){
+                        console.log(data.error)
+                        return data.error
+                    }
+                }
+            })
+    },'');
+
+    var form = $('#add_form');
+
+    form.validate({
+        rules: {
+            'firstName': {
+                required: true
+            },
+            'lastName': {
+                required: true
+            },
+            'post': {
+                required: true,
+                number: true,
+                maxlength: 4,
+                minlength: 4,
+                postExist: true
+            },
+            'email': {
+                required: true,
+                email: true,
+                emailExist: true
+            },
+            'fonction': {
+                required: true,
+            },
+            'entity': {
+                required: true,
+            },
+             'unit': {
+                required: true,
+            },
+             'direction': {
+                required: true,
+            },
+             'department': {
+                required: true,
+            },
+             'fonction': {
+                required: true,
+            },
+
+        },
+        messages: {
+            'firstName': {
+                required: 'Nom obligatoire'
+            },
+            'lastName': {
+                required: 'Prénom obligatoire'
+            },
+            'post': {
+                required: 'N° post obligatoire',
+                number: 'Entrer un nombre',
+                maxlength: 'N° poste invalide',
+                minlength: 'N° poste invalide',
+                remote: $.validator.format("{0} est déjà associé à un compte")
+            },
+            'email': {
+                required: 'Email obligatoire',
+                email: 'Entrer un email valide',
+                remote: $.validator.format("{0} est déjà associé à un agent")
+            },
+            'fonction': {
+                required: 'Fonction obligatoire',
+            },
+            'entity': {
+                required: 'Entité obligatoire',
+            },
+             'unit': {
+                required: 'Unité obligatoire',
+            },
+             'direction': {
+                required: 'Direction obligatoire',
+            },
+             'department': {
+                required: 'Département obligatoire',
+            },
+             'fonction': {
+                required: 'Fonction obligatoire',
+            },
+
+        }
+    });
+    function addElement(){
+    $('.register').click(function (e) {
+        e.preventDefault();
+        console.log($('#add_form').valid());
+        if ($('#add_form').valid()) {
+            $.ajax({
+                url: '{{ path("agents") }}',
+                method: 'POST',
+                data: $('#add_form').serialize(),
+                success: function (response) {
+                    if (response.agent) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Agent ajouté avec succès'
+                        });
+                        $("#example1 tbody").
+                        html(response.row);
+                        
+                        deleteFunction();
+                        updateElement();
+                        removeElement();
+                        modifyFunction();
+                        $('#add_form').trigger('reset');
+
+                    }
+                }
+            })
+        }
+    })
+    }
+
+    function updateElement(){
+    $("[id^=edit-btn]").click(function(){
+        var str = $(this).attr("id");
+        var id = str.substr(9, 10);
+       
+          if ($('#edit_form_'+id).valid()) {
+            $.ajax({
+                url: '{{ path("agents") }}',
+                method: 'POST',
+                data: $('#edit_form_'+id).serialize(),
+                success: function (response) {
+                    if (response.agent) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Agent modifié avec succès'
+                        });
+                       $("#example1 tbody").
+                        html(response.row);
+
+                            deleteFunction();
+                            addElement();
+                            removeElement();
+                            modifyFunction();
+
+                    }
+                }
+            })
+        }
+    })
+    }
+
+    function removeElement(){
+    $("[id^=btn-delete-]").click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(11, 12);
+         
+            $.ajax({
+                url: '{{ path("agent_remove") }}',
+                method: 'POST',
+                data: {'agent': subStr},
+                success: function (response) {
+                    if (response.agent) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Agent supprimé avec succès'
+                        });
+                        
+                         $('#tr-'+response.agent).remove();
+                    }
+                }
+            })
+    })
+    }
+
+
+        $('[id^=entity]').change(function () {
         var unitSelector = $(this);
         
-        // Request the neighborhoods of the selected city.
         $.ajax({
             url: "{{ path('get_units_from_entity') }}",
             type: "GET",
@@ -348,13 +623,6 @@
             },
             success: function (units) {
                 var unitSelector = $("[id^=unit]");
-                var directionSelector = $("#direction");
-                var departementSelector = $("#department");
-                var fonctionSelector = $("#fonction");
-                // Remove current options
-                directionSelector.html('Selectionner une direction...');
-                departementSelector.html('Selectionner un département...');
-                fonctionSelector.html('Selectionner une fonction...');
                 // Remove current options
                 unitSelector.html('');
                 
@@ -372,7 +640,8 @@
         });
     });
 
-    $('[id^=unit]').change(function () {
+
+        $('[id^=unit]').change(function () {
         var directionSelector = $(this);
         
         // Request the neighborhoods of the selected city.
@@ -385,14 +654,8 @@
             },
             success: function (directions) {
                 var directionSelector = $("[id^=direction]");
-                var departementSelector = $("#department");
-                var fonctionSelector = $("#fonction");
-                // Remove current options
-                directionSelector.html('Selectionner une direction...');
-                departementSelector.html('Selectionner une département...');
-                fonctionSelector.html('Selectionner une fonction...');
-                
-                // Empty value ...
+              
+                directionSelector.html(' ');    
                 directionSelector.append('<option value> Selectionnner une direction de ' + directionSelector.find("option:selected").text() + ' ...</option>');
                 
                 
@@ -406,10 +669,9 @@
         });
     });
 
-     $('[id^=direction]').change(function () {
+
+         $('[id^=direction]').change(function () {
         var departmentSelector = $(this);
-        
-        // Request the neighborhoods of the selected city.
         $.ajax({
             url: "{{ path('get_departments_from_direction') }}",
             type: "GET",
@@ -435,12 +697,9 @@
                 alert("An error ocurred while loading data ...");
             }
         });
-
-         $('[id^=department]').change(function () {
+        $('[id^=department]').change(function () {
         var serviceSelector = $(this);
-        
-        // Request the neighborhoods of the selected city.
-        $.ajax({
+          $.ajax({
             url: "{{ path('get_services_from_department') }}",
             type: "GET",
             dataType: "JSON",
@@ -464,77 +723,21 @@
                 alert("An error ocurred while loading data ...");
             }
         });
-        });
-
-        
-    	$.validator.setDefaults({
-		errorClass: 'help-block',
-		errorPlacement: function (error, element) {
-			error.addClass("label");
-			error.css("background", "red", );
-			error.insertAfter(element.parent());
-		},
-		highlight: function (element, errorClass, validClass) {
-			$(element).parents(".row").addClass(errorClass);
-		},
-		unhighlight: function (element, errorClass, validClass) {
-			$(element).parent().next().remove();
-
-		}
-	});
-
-		$.validator.setDefaults({
-			debug: true,
-			success: "valid"
-		});
-
-
-        $('.register').click(function (e) {
-        e.preventDefault();
-        if ($('#add_agent_form').valid()) {
-            $.ajax({
-                url: '{{ path("agents") }}',
-                method: 'POST',
-                data: $('#add_agent_form').serialize(),
-                success: function (response) {
-                    if (response.agent) {
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top',
-                            showConfirmButton: false,
-                            timer: 5000,
-                            width: 300,
-                            timerProgressBar: true,
-                            onOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            },
-
-                        })
-
-                         Toast.fire({
-                            icon: 'success',
-                            title: 'Agent ajouté avec succès'
-                        });
-                        
-                         $.post($('#add_agent_form').attr('action'), function (
-                            response) {
-                            $('#table-content').replaceWith($(response).find(
-                                '#table-content'));
-                        });
-                        $('#add_agent_form').trigger('reset');
-                    }
-                }
-            })
-        }
-    })
+        })
+ 
     });
-
-    $("[id^=edit-btn]").click(function(){
-        var str = $(this).attr("id");
-        var agentId = str.substr(9, 10);
     
-    })
+
+    function group(){
+    deleteFunction();
+    addElement();
+    updateElement();
+    removeElement();
+    modifyFunction();
+    }
+
+    group();
+
     
 </script>
 {% endblock %}

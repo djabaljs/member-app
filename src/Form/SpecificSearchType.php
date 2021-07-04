@@ -3,83 +3,61 @@
 namespace App\Form;
 
 use App\Entity\Unit;
-use App\Entity\Agent;
 use App\Entity\Entity;
 use App\Entity\Service;
 use App\Entity\Direction;
 use App\Entity\Department;
+use App\Entity\SpecificSearch;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Doctrine\ORM\EntityManagerInterface;
-use Proxies\__CG__\App\Entity\Entity as EntityEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
-class AgentTypeEdit extends AbstractType
+class SpecificSearchType extends AbstractType
 {
-
-    private $em;
-
-    public function __construct(EntityManagerInterface $manager)
-    {
-        $this->em = $manager;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName', TextType::class, [
-                'label' => false,
-                'required' => true
-            ])
-            ->add('lastName', TextType::class, [
-                'label' => false,
-                'required' => true
-            ])
-            ->add('post', TextType::class, [
-                'label' => false,
-                'required' => true
-            ])
-            ->add('email', EmailType::class, [
-                'label' => false,
-                'required' => true
-            ])
-            ->add('fonction', TextType::class, [
-                'label' => false,
-                'required' => true
-            ])
             ->add('entity', EntityType::class, [
                 'label' => false,
                 'class' => Entity::class,
-            ])
-            ->add('direction', EntityType::class, [
-                'label' => false,
-                'class' => Direction::class,
-            ])
-            ->add('department', EntityType::class, [
-                'label' => false,
-                'class' => Department::class,
+                'placeholder' => 'Selectionner une entité...'
             ])
             ->add('unit', EntityType::class, [
                 'label' => false,
                 'class' => Unit::class,
+                'placeholder' => 'Selectionner une unité...'
+
+            ])
+            ->add('direction', EntityType::class, [
+                'label' => false,
+                'class' => Direction::class,
+                'placeholder' => 'Selectionner une direction...'
+
+            ])
+            ->add('department', EntityType::class, [
+                'label' => false,
+                'class' => Department::class,
+                'placeholder' => 'Selectionner un département...'
+
             ])
             ->add('fonction', EntityType::class, [
                 'label' => false,
                 'class' => Service::class,
+                'placeholder' => 'Selectionner une fonction...'
+
             ])
         ;
+
 
            // 3. Add 2 event listeners for the form
            $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
            $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
-    }
-    
+    }  
+
     protected function addElements(FormInterface $form, Entity $entity = null)
     {
           // 4. Add the province element
@@ -160,16 +138,16 @@ class AgentTypeEdit extends AbstractType
         $form = $event->getForm();
 
         // When you create a new person, the City is always empty
-        $unit = $entity->getUnit() ? $entity->getUnit() : null;
+        $unit = $entity->unit? $entity->unit : null;
         
         $this->addElements($form, $unit);
     }
     
-    
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Agent::class,
+            'data_class' => SpecificSearch::class,
         ]);
     }
 

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}-CONNEXION{% endblock %}
+
+{% block body %}
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <img src="{{asset('imgs/bar2.png')}}" width="200"/>
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg" style="color: #ed8000">Connectez-vous afin d'ouvrir une session.</p>
+
+      <form action="{{path('app_login')}}" method="post">
+       {% if error %}
+        <div class="alert alert-danger">
+            {{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.username }}, <a
+                href="{{ path('administrators_logout') }}">Logout</a>
+        </div>
+        {% endif %}
+
+        <div class="input-group mb-3">
+         <input type="email" placeholder="Email" name="email" value="{{ last_username }}" required id="email" class="form-control">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span style="color: #ed8000" class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" name="password" class="form-control" required placeholder="Password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span style="color: #ed8000" class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <!-- /.col -->
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+          <div class="col-12">
+            <button type="submit" style="background: #ed8000; border: 1px solid transparent" class="btn btn-primary btn-block">Se connecter</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+
+      <p class="mb-1">
+      <br/>
+        <a href="forgot-password.html" style="color: green;">Mot de passe oublié</a>
+      </p>
+     
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+
+{% endblock %}

@@ -4,9 +4,13 @@ namespace App\Entity;
 
 use App\Repository\AgentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=AgentRepository::class)
+ * @UniqueEntity("email", "post")
  */
 class Agent
 {
@@ -29,11 +33,14 @@ class Agent
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Assert\Positive
      */
     private $post;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email
      */
     private $email;
 

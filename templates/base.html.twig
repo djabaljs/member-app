@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ANNUAIRE|LOGIN</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{{asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{asset('dist/css/adminlte.min.css')}}">
+  {% block stylesheets %}{% endblock %}
+</head>
+<body class="hold-transition login-page">
+{% block body %}{% endblock %}
+
+<nav class="navbar fixed-bottom  navbar-expand-lg navbar-light bg-light">
+  <div class="offset-4 col-4">
+        
+          <p><strong>Copyright &copy; 2021-2022 <a style="color: #5fa53a;" href="https://www.presidence.ci/"> PRESIDENCE-CI</a>.</strong>
+          Tous les droits réservés.</p>
+          
+  </div>
+  <div class="col-4">
+      <a href="{{path('app_login')}}"><i style="font-size:30px; color:#ed8000"  class="fa fa-sign-out-alt mr-auto"></i></a>
+  </div>  
+</nav>
+<!-- jQuery -->
+<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<!-- AdminLTE App -->
+<script src="{{asset('dist/js/adminlte.min.js')}}"></script>
+{% block javascripts %}{% endblock %}
+
+</body>
+</html>

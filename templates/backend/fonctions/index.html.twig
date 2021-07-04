@@ -1,0 +1,347 @@
+{% extends "admin_template.html.twig" %}
+{% block title %}{{ parent() }} |UNITES{% endblock %}
+{% block head %}
+{% block stylesheets %}
+
+{% endblock %}
+{% endblock %}
+{% block body %}
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">Dashboard</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Fonctions</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+
+<div class="container-fluid">
+    <div class="box-header">
+        <h3 class="box-title">
+            <div class="btn-group">
+                <button type="button" class="btn btn-block btn-success add_btn"><i
+                        class="glyphicon glyphicon-save"></i>
+                    Créer</button>
+            </div>
+        </h3>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-outline card-info">
+                <div class="">
+                    <div class="card-header">
+                        <h3 class="card-title">Liste des fonctions</h3>
+                    </div>
+
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Départements</th>
+                                <th>Noms</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-content">
+                            {% for fonction in  fonctions %}
+                            <tr id="tr-{{fonction.id}}">
+                                <td>{{ loop.index }}</td>
+                                <td>{{ fonction.department.name }}</td>
+                                <td id="td-{{fonction.id}}">{{ fonction.name }}</td>
+                                <td >
+                                    <a type="submit" id="btn-modify-{{fonction.id}}"
+                                        class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+                                    <a type="submit" id="delete-{{fonction.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
+                                        data-target="#modal-danger">Supprimer 
+                                        <i class="fa fa-trash"></i></a>
+
+                                </td>
+                            </tr>
+                             <div class="modal fade" id="modal_delete_{{fonction.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{fonction.name}}</h5>
+                                            <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </a>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Voulez-vous vraiment supprimer {{fonction.name}}? Toutes les données liées à cette fonction seront définitivement supprimées!</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                                            <a id="btn-delete-{{fonction.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="modal_edit_{{fonction.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header border-bottom-0">
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier une fonction</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="modal-body">
+                                        <form id="edit_form_{{fonction.id}}" action="{{path('entities')}}">
+                                            <div class="row">
+                                             <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="department">Département</label>
+                                                        <select name="department" class="form-control">
+                                                         {% for department in departments %}
+                                                          {% if fonction.department.id == fonction.id %} 
+                                                          <option value="{{department.id}}" selected>{{department.name}}</option>
+                                                          {% else %}
+                                                          <option value="{{department.id}}">{{department.name}}</option>
+                                                          {% endif %}
+                                                         {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="name">Nom</label>
+                                                        <input type="text" name="name" id="name-{{fonction.id}}" class="form-control" value="{{fonction.name}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="fonction" value="{{fonction.id}}">
+                                         </form>
+                                        </div>
+                                        <div class="modal-footer border-top-0 d-flex justify-content-center">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                            <button type="submit" id="edit-btn-{{fonction.id}}" class="btn btn-warning">Modifier</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.col-->
+   <div id="modal_add" class="modal fade" id="form" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter une fonction</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(form, {attr:{'id':'add_form' }})
+            }}
+            <div class="modal-body">
+                 <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="department">Département</label>
+                            {{ form_row(form.department, {attr:{'class':'form-control','placeholder':'Nom' }})
+                            }}
+                        </div>
+                    </div>
+                     <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="name">Nom</label>
+                            {{ form_row(form.name, {attr:{'class':'form-control','placeholder':'Nom' }})
+                            }}
+                        </div>
+                </div>
+                </div>
+            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-success register">Enregistrer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script src=" {{ asset("js/validate.js") }}"></script>
+<script src="{{ asset("js/sweetAlert.js") }}"></script>
+<script>
+
+    $('.add_btn').click(function () {
+        $('#modal_add').modal('show');
+    })
+
+    function modifyFunction(){
+    $( "[id^='btn-modify']" ).click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(11, 12);
+        $('#modal_edit_'+subStr).modal('show');
+    })
+    }
+
+
+    function deleteFunction(){
+    $( "[id^='delete-']" ).click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(7, 8);
+       $('#modal_delete_'+subStr).modal('show');
+    })
+    }
+    
+    $.validator.setDefaults({
+        debug: true,
+        success: "valid"
+    });
+
+    function addElement(){
+    $('.register').click(function (e) {
+        e.preventDefault();
+        if ($('#add_form').valid()) {
+            $.ajax({
+                url: '{{ path("fonctions") }}',
+                method: 'POST',
+                data: $('#add_form').serialize(),
+                success: function (response) {
+                    if (response.fonction) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Fonction ajoutéé avec succès'
+                        });
+                        $("#example1 tbody").
+                        html(response.row);
+                            deleteFunction();
+                            updateElement();
+                            removeElement();
+                            modifyFunction();
+                        $('#add_form').trigger('reset');
+
+                    }
+                }
+            })
+        }
+    })
+    }
+
+    function updateElement(){
+    $("[id^=edit-btn]").click(function(){
+        var str = $(this).attr("id");
+        var id = str.substr(9, 10);
+       
+          if ($('#edit_form_'+id).valid()) {
+            $.ajax({
+                url: '{{ path("fonctions") }}',
+                method: 'POST',
+                data: $('#edit_form_'+id).serialize(),
+                success: function (response) {
+                    if (response.fonction) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Fonction modifiée avec succès'
+                        });
+                       $("#example1 tbody").
+                        html(response.row);
+
+                        group();
+                    }
+                }
+            })
+        }
+    })
+    }
+
+    function removeElement(){
+    $("[id^=btn-delete-]").click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(11, 12);
+       
+            $.ajax({
+                url: '{{ path("fonction_remove") }}',
+                method: 'POST',
+                data: {'fonction': subStr},
+                success: function (response) {
+                    if (response.fonction) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Fonction supprimée avec succès'
+                        });
+                        
+                         $('#tr-'+response.fonction).remove();
+                    }
+                }
+            })
+    })
+    }
+
+    function group(){
+    deleteFunction();
+    addElement();
+    updateElement();
+    removeElement();
+    modifyFunction();
+    }
+
+    group();
+
+</script>
+{% endblock %}

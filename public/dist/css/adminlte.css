@@ -27183,7 +27183,7 @@ body.text-sm .input-group-text {
 }
 
 .card-primary.card-outline {
-  border-top: 3px solid #007bff;
+  border-top: 3px solid #ed8000;
 }
 
 .card-primary.card-outline-tabs > .card-header a:hover {
@@ -27191,7 +27191,7 @@ body.text-sm .input-group-text {
 }
 
 .card-primary.card-outline-tabs > .card-header a.active {
-  border-top: 3px solid #007bff;
+  border-top: 3px solid #ed8000;
 }
 
 .bg-primary > .card-header .btn-tool,
@@ -29594,15 +29594,15 @@ html.maximized-card {
 }
 
 .dark-mode .card-primary.card-outline {
-  border-top: 3px solid #3f6791;
+  border-top: 3px solid #ed8000;
 }
 
 .dark-mode .card-primary.card-outline-tabs > .card-header a:hover {
-  border-top: 3px solid #dee2e6;
+  border-top: 3px solid #ed8000;
 }
 
 .dark-mode .card-primary.card-outline-tabs > .card-header a.active {
-  border-top: 3px solid #3f6791;
+  border-top: 3px solid #ed8000;
 }
 
 .dark-mode .bg-primary > .card-header .btn-tool,

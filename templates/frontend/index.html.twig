@@ -1,0 +1,371 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+{% block body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-4 offset-4">
+      <img class="img-fluid " src="{{asset('imgs/logo.png')}}"/>
+    </div>
+  </div>
+  <br/></br/>
+  <div class="row">
+    <div class="col-4">
+    <div class="col-12">
+     <button type="button" id="specific-search-btn" class="btn btn-success form-control">Recherche spécifique</button>
+    </div>
+    <div class="col-12">
+     <button type="button" id="standard-search-btn" class="btn btn-success form-control">Recherche standard</button>
+    </div>
+     <div class="col-12" id="specific_search">
+     {{form_start(form)}}
+       <br/>
+       <div class="form-group">
+        {{ form_row(form.entity, {attr:{'class':'form-control'}})}}
+       </div>
+         <div class="form-group">
+        {{ form_row(form.unit, {attr:{'class':'form-control'}})}}
+       </div>
+         <div class="form-group">
+        {{ form_row(form.direction, {attr:{'class':'form-control'}})}}
+       </div>
+         <div class="form-group">
+        {{ form_row(form.department, {attr:{'class':'form-control'}})}}
+       </div>
+         <div class="form-group">
+        {{ form_row(form.fonction, {attr:{'class':'form-control'}})}}
+       </div>
+     {{form_end(form)}}
+    </div>
+    <div>
+    <div class="col-12" id="standard_search">
+     <br/>
+     <input type="text" id="standard_input" placeholder="Rechercher par nom ou tout autre information..." class="form-control" />
+     <div id="resultSearch"></div>
+    </div>
+   </div>
+     
+  </div>
+<div class="col-8">
+    <section class="content" id="table_section">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card" id="section_scroll">
+              <div class="card-header">
+                <h3 class="card-title">Resultats des recherches</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example2" class="table table-bordered table-hover">
+                  <thead>
+                  <tr>
+                    <th>Nom et prenoms</th>
+                    <th>N° Poste</th>
+                    <th>Email</th>
+                    <th>Fonction</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody id="content">
+                  <tr>
+                  <td colspan="5">Aucun resultat</td>
+                  </tr>
+                  </tbody>
+                  <tfoot>
+                  <tr>
+                   <th>Nom et prenoms</th>
+                    <th>N° Poste</th>
+                    <th>Email</th>
+                    <th>Fonction</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+  <div>
+</div>
+</div>
+{% endblock %}
+{% block javascripts %}
+ <script>
+  $('#standard-search-btn').hide();
+  $('#specific_search').hide();
+  $('#specific-search-btn').click(function(){
+      $('#specific-search-btn').hide();
+      $('#standard-search-btn').show();
+      $('#specific_search').show();
+      $('#standard_search').hide();
+  })
+    $('#standard-search-btn').click(function(){
+      $('#specific-search-btn').show();
+      $('#standard-search-btn').hide();
+      $('#specific_search').hide();
+       $('#standard_search').show();
+  })
+
+      $('[id^=entity]').change(function () {
+        var unitSelector = $(this);
+        var entityText = $('#entity option:selected').text();
+       
+        // Request the neighborhoods of the selected city.
+        $.ajax({
+            url: "{{ path('get_units_from_entitys') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                entityId: unitSelector.val()
+            },
+            success: function (units) {
+                
+                var unitSelector = $("[id^=unit]");
+                // Remove current options
+                unitSelector.html('');
+                
+                // Empty value ...
+                unitSelector.append('<option value> Selectionnner une unite de ' + unitSelector.find("option:selected").text() + ' ...</option>');
+                
+                
+                $.each(units, function (key, unit) {
+                    unitSelector.append('<option value="' + unit.id + '">' + unit.name + '</option>');
+                });
+            },
+            error: function (err) {
+                console.log(err)
+                alert("An error ocurred while loading data ...");
+            }
+        });
+
+          $.ajax({
+          url: "{{ path('specific_search') }}",
+          type: "POST",
+          data: {
+              'search': entityText
+          },
+          success: function (data) {
+          $('#table_section').show();
+          $('#content').html(data.content);
+
+          $('[id^=agent-detail]').click(function(){
+              var str = $(this).attr("id");
+              var subStr = str.substr(13, 14);
+              $('#modal_agent_'+subStr).modal('show');
+          })
+          }
+      });
+    });
+
+    $('[id^=unit]').change(function () {
+        var directionSelector = $(this);
+        var unitText = $('#unit option:selected').text();
+        // Request the neighborhoods of the selected city.
+        $.ajax({
+            url: "{{ path('get_directions_from_units') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                unitId: directionSelector.val()
+            },
+            success: function (directions) {
+                var directionSelector = $("[id^=direction]");
+
+                directionSelector.html('');
+                // Empty value ...
+                directionSelector.append('<option value> Selectionnner une direction de ' + directionSelector.find("option:selected").text() + ' ...</option>');
+                
+                
+                $.each(directions, function (key, direction) {
+                    directionSelector.append('<option value="' + direction.id + '">' + direction.name + '</option>');
+                });
+            },
+            error: function (err) {
+                alert("An error ocurred while loading data ...");
+            }
+        });
+          $.ajax({
+          url: "{{ path('standard_search') }}",
+          type: "POST",
+          data: {
+              'search': unitText
+          },
+          success: function (data) {
+              $('#table_section').show();
+          $('#content').html(data.content);
+
+          $('[id^=agent-detail]').click(function(){
+              var str = $(this).attr("id");
+              var subStr = str.substr(13, 14);
+              $('#modal_agent_'+subStr).modal('show');
+          })
+          },
+          error: function (err) {
+              alert("An error ocurred while loading data ...");
+          }
+      });
+    });
+
+     $('[id^=direction]').change(function () {
+        var departmentSelector = $(this);
+        var directionText = $('#direction option:selected').text();
+        
+        // Request the neighborhoods of the selected city.
+        $.ajax({
+            url: "{{ path('get_departments_from_directions') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                directionId: departmentSelector.val()
+            },
+            success: function (departments) {
+                var departmentSelector = $("[id^=department]");
+
+                // Remove current options
+                departmentSelector.html('');
+                
+                // Empty value ...
+                departmentSelector.append('<option value> Selectionnner un département de ' + departmentSelector.find("option:selected").text() + ' ...</option>');
+                
+                
+                $.each(departments, function (key, department) {
+                    departmentSelector.append('<option value="' + department.id + '">' + department.name + '</option>');
+                });
+            },
+            error: function (err) {
+                alert("An error ocurred while loading data ...");
+            }
+        });
+
+         $.ajax({
+          url: "{{ path('standard_search') }}",
+          type: "POST",
+          data: {
+              'search': directionText
+          },
+          success: function (data) {
+              $('#table_section').show();
+          $('#content').html(data.content);
+
+          $('[id^=agent-detail]').click(function(){
+              var str = $(this).attr("id");
+              var subStr = str.substr(13, 14);
+              $('#modal_agent_'+subStr).modal('show');
+          })
+          },
+          error: function (err) {
+              alert("An error ocurred while loading data ...");
+          }
+      });
+
+        $('[id^=department]').change(function () {
+        var serviceSelector = $(this);
+        var departmentText = $('#department option:selected').text();
+        
+        // Request the neighborhoods of the selected city.
+        $.ajax({
+            url: "{{ path('get_services_from_departments') }}",
+            type: "GET",
+            dataType: "JSON",
+            data: {
+                departmentId: serviceSelector.val()
+            },
+            success: function (services) {
+                var serviceSelector = $("[id^=fonction]");
+                // Remove current options
+                serviceSelector.html('');
+                
+                // Empty value ...
+                serviceSelector.append('<option value> Selectionnner une fonction de ' + serviceSelector.find("option:selected").text() + ' ...</option>');
+                
+                $.each(services, function (key, service) {
+                    serviceSelector.append('<option value="' + service.id + '">' + service.name + '</option>');
+                });
+            },
+            error: function (err) {
+                alert("An error ocurred while loading data ...");
+            }
+        });
+
+        $.ajax({
+          url: "{{ path('standard_search') }}",
+          type: "POST",
+          data: {
+              'search': departmentText
+          },
+          success: function (data) {
+              $('#table_section').show();
+          $('#content').html(data.content);
+
+          $('[id^=agent-detail]').click(function(){
+              var str = $(this).attr("id");
+              var subStr = str.substr(13, 14);
+              $('#modal_agent_'+subStr).modal('show');
+          })
+          },
+          error: function (err) {
+              alert("An error ocurred while loading data ...");
+          }
+         });
+        });
+	});
+
+   $('[id^=fonction]').change(function () {
+        var fonctionText = $('#fonction option:selected').text();
+        
+        $.ajax({
+          url: "{{ path('standard_search') }}",
+          type: "POST",
+          data: {
+              'search': fonctionText
+          },
+          success: function (data) {
+              $('#table_section').show();
+          $('#content').html(data.content);
+
+          $('[id^=agent-detail]').click(function(){
+              var str = $(this).attr("id");
+              var subStr = str.substr(13, 14);
+              $('#modal_agent_'+subStr).modal('show');
+          })
+          },
+          error: function (err) {
+              alert("An error ocurred while loading data ...");
+          }
+         });
+  	});
+
+    $('#standard_input').keyup(function(){
+    $.ajax({
+        url: '{{path("standard_search")}}',
+        type: 'POST',
+        data: {'search': $(this).val()},
+        success: function(data){
+            $('#table_section').show();
+            $('#content').html(data.content);
+
+            $('[id^=agent-detail]').click(function(){
+                var str = $(this).attr("id");
+                var subStr = str.substr(13, 14);
+                $('#modal_agent_'+subStr).modal('show');
+            })
+        }
+     })
+    })
+
+    
+ </script>
+{% endblock %} 

@@ -29,161 +29,63 @@
 <div class="container-fluid">
 	<!-- Small boxes (Stat box) -->
 	<div class="row">
-		<div class="col-lg-3 col-6">
+	
+		<div class="col-lg-4 col-6">
 			<!-- small box -->
+			<a href="{{path('agents')}}" >
 			<div class="small-box bg-info">
 				<div class="inner">
-					<h3></h3>
+					<h3>{{agents|length}}</h3>
 
-					<p>NOUVELLES DEMANDES</p>
+					<p>Agents</p>
 				</div>
 				<div class="icon">
 					<i class="ion ion-bag"></i>
 				</div>
 			</div>
+		</a>
+
 		</div>
 		<!-- ./col -->
-		<div class="col-lg-3 col-6">
+		<div class="col-lg-4 col-6">
 			<!-- small box -->
+				<a href="{{path('departments')}}" >
 			<div class="small-box bg-success">
 				<div class="inner">
-					<h3></h3>
+					<h3>{{departments|length}}</h3>
 
-					<p>DEMANDE EN COURS</p>
+					<p>Départements</p>
 				</div>
 				<div class="icon">
 					<i class="ion ion-stats-bars"></i>
 				</div>
 			</div>
+			</a>
 		</div>
 		<!-- ./col -->
-		<div class="col-lg-3 col-6 ">
+		<div class="col-lg-4 col-6 ">
 			<!-- small box -->
+				<a href="{{path('departments')}}" >
 			<div class="small-box bg-warning">
 				<div class="inner">
-					<h3></h3>
+					<h3>{{services|length}}</h3>
 
-					<p>DEMANDES TRAITÉES</p>
+					<p>Services</p>
 				</div>
 				<div class="icon">
 					<i class="ion ion-person-add"></i>
 				</div>
 			</div>
-		</div>
-		<div class="col-lg-3 col-6 ">
-			<!-- small box -->
-			<div class="small-box bg-danger">
-				<div class="inner">
-					<h3>0</h3>
-
-					<p>DEMANDES REJETÉES</p>
-				</div>
-				<div class="icon">
-					<i class="ion ion-person-add"></i>
-				</div>
-			</div>
-		</div>
-		<!-- ./col -->
-		<div class="col-lg-3 col-6">
-			<!-- small box -->
-			<div class="small-box bg-dark">
-				<div class="inner">
-					<h3></h3>
-
-					<p>ADMINISTRATEURS</p>
-				</div>
-				<div class="icon">
-					<i class="ion ion-stats-bars"></i>
-				</div>
-			</div>
-		</div>
-		<!-- ./col -->
-		<!-- ./col -->
-		<div class="col-lg-3 col-6">
-			<!-- small box -->
-			<div class="small-box bg-blue">
-				<div class="inner">
-					<h3></h3>
-
-					<p>DEMANDEURS</p>
-				</div>
-				<div class="icon">
-					<i class="ion ion-stats-bars"></i>
-				</div>
-			</div>
-		</div>
-		<!-- ./col -->
-		<!-- ./col -->
-		<div class="col-lg-3 col-6">
-			<!-- small box -->
-			<div class="small-box bg-purple">
-				<div class="inner">
-					<h3></h3>
-
-					<p>CORRESPONDANTS</p>
-				</div>
-				<div class="icon">
-					<i class="ion ion-stats-bars"></i>
-				</div>
-			</div>
-		</div>
-		<!-- ./col -->
-		<!-- ./col -->
-		<div class="col-lg-3 col-6">
-			<!-- small box -->
-			<div class="small-box bg-black">
-				<div class="inner">
-					<h3></h3>
-
-					<p>COMMISSION</p>
-				</div>
-				<div class="icon">
-					<i class="ion ion-stats-bars"></i>
-				</div>
-			</div>
-		</div>
-		<!-- ./col -->
+			</a>
 	</div>
 	<!-- /.row -->
-	<!-- Main row -->
-	<div class="row">
-		<!-- Left col -->
-		<section class="col-lg-4">
-			<div class="card">
-				<div class="card-header">
-					<h3 class="card-title">
-						<i class="fas fa-chart-pie mr-1"></i>
-						Rapport
-					</h3>
-				</div>
-				<div class="card-body">
-					<canvas id="donutChart"
-						style="min-height: 300px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-				</div>
-				<!-- /.card-body -->
-			</div>
-		</section>
-		<section class="col-lg-8">
-			<div class="card">
-				<div class="card-header">
-					<h3 class="card-title"><i class="fas fa-chart-pie mr-1"></i>
-						Rapport</h3>
-
-				</div>
-				<div class="card-body">
-					<div class="chart">
-						<canvas id="stackedBarChart"
-							style="min-height: 300px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-					</div>
-				</div>
-				<!-- /.card-body -->
-			</div>
-		</section>
-		<!-- /.Left col -->
-
-	</div>
-	<!-- /.col-->
 </div>
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4"><img class="center-block img-fluid" src="{{asset('imgs/bar2.png')}}" /></div>
+    <div class="col-4"></div>
+  </div>
+
 <!-- /.row (main row) -->
 </div><!-- /.container-fluid -->
 
