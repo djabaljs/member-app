@@ -12,8 +12,10 @@ use App\Form\EntityType;
 use App\Entity\Direction;
 use App\Form\ServiceType;
 use App\Entity\Department;
+use App\Entity\UtilNumber;
 use App\Form\DirectionType;
 use App\Form\DepartmentType;
+use App\Form\UtilNumberType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -1663,6 +1665,217 @@ class AdminController extends AbstractController
         return null;
     }
 
+
+    
+    /**
+     * 
+     * @Route("/util-numbers", name="utilNumbers")
+     */
+    public function utilNumbers(Request $request): Response
+    {   
+   
+        $utilNumber = new UtilNumber();
+        $form = $this->createForm(UtilNumberType::class, $utilNumber);
+        $form->handleRequest($request);
+  
+        if($request->isXmlHttpRequest() && !$request->get('utilNumber')){
+     
+           $this->manager->persist($utilNumber);
+           $this->manager->flush();
+
+           $utilNumbers = $this->manager->getRepository(UtilNumber::class)->findBy([], ['id' => 'DESC']);
+            
+           $row = '';
+           foreach($utilNumbers as $key => $utilNumber){
+           $row .= '
+           <tr id="tr-'.$utilNumber->getId().'">
+           <td>'.($key+1).'</td>
+            <td id="td-'.$utilNumber->getId().'">'.$utilNumber->getName().'</td>
+            <td id="td-'.$utilNumber->getId().'">'.$utilNumber->getPhone().'</td>
+           <td >
+               <a type="submit" id="btn-modify-'.$utilNumber->getId().'"
+                   class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+               <a type="submit" id="delete-'.$utilNumber->getId().'" class="btn btn-danger btn-sm"  data-toggle="modal"
+                   data-target="#modal-danger">Supprimer 
+                   <i class="fa fa-trash"></i></a>
+                   <div class="modal fade" id="modal_delete_'.$utilNumber->getId().'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog" role="document">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h5 class="modal-title text-uppercase" style="color:#ffff;" >'.$utilNumber->getName().'</h5>
+                               <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span>
+                               </a>
+                           </div>
+                           <div class="modal-body">
+                               <p>Voulez-vous vraiment supprimer '.$utilNumber->getName().'? Toutes les données liées à ce numéro utile seront définitivement supprimées!</p>
+                           </div>
+                           <div class="modal-footer">
+                               <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                               <a id="btn-delete-'.$utilNumber->getId().'" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div id="modal_edit_'.$utilNumber->getId().'" class="modal fade" id="form" tabindex="-1" role="dialog"
+                   aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                       <div class="modal-content">
+                           <div class="modal-header border-bottom-0">
+                               <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un numéro utile</h5>
+                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span>
+                               </button>
+                           </div>
+                           
+                           <div class="modal-body">
+                           <form id="edit_form_'.$utilNumber->getId().'" action="">
+                               <div class="row">
+                                   <div class="col-md-6 col-sm-6 col-xs-6">
+                                       <div class="form-group">
+                                           <label for="name">Nom</label>
+                                           <input type="text" name="name" id="name-'.$utilNumber->getId().'" class="form-control" value="'.$utilNumber->getName().'">
+                                       </div>
+                                   </div>
+                                   <div class="col-md-6 col-sm-6 col-xs-6">
+                                       <div class="form-group">
+                                           <label for="phone">Téléphone</label>
+                                           <input type="text" name="phone" id="name-'.$utilNumber->getId().'" class="form-control" value="'.$utilNumber->getPhone().'">
+                                       </div>
+                                   </div>
+                               </div>
+                               <input type="hidden" name="utilNumber" value="'.$utilNumber->getId().'">
+                            </form>
+                           </div>
+                           <div class="modal-footer border-top-0 d-flex justify-content-center">
+                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                               <button type="submit" id="edit-btn-'.$utilNumber->getId().'" class="btn btn-warning">Modifier</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </td>
+            </tr>
+           ';
+           }
+           return new JsonResponse(['utilNumber' => $utilNumber->getId(), 'row' => $row]);
+        }elseif($request->isXmlHttpRequest() && $request->get('utilNumber')){
+       
+            $utilNumber = $this->manager->getRepository(UtilNumber::class)->find($request->get('utilNumber'));
+        
+            $utilNumber->setName($request->get('name'));
+            $utilNumber->setPhone($request->get('phone'));
+          
+            $this->manager->persist($utilNumber);
+            $this->manager->flush();
+
+            $utilNumbers = $this->manager->getRepository(UtilNumber::class)->findBy([], ['id' => 'DESC']);
+            
+            $row = '';
+            foreach($utilNumbers as $key => $utilNumber){
+            $row .= '
+            <tr id="tr-'.$utilNumber->getId().'">
+            <td>'.($key+1).'</td>
+            <td id="td-'.$utilNumber->getId().'">'.$utilNumber->getName().'</td>
+            <td id="td-'.$utilNumber->getId().'">'.$utilNumber->getPhone().'</td>
+            <td >
+                <a type="submit" id="btn-modify-'.$utilNumber->getId().'"
+                    class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+                <a type="submit" id="delete-'.$utilNumber->getId().'" class="btn btn-danger btn-sm"  data-toggle="modal"
+                    data-target="#modal-danger">Supprimer 
+                    <i class="fa fa-trash"></i></a>
+                    <div class="modal fade" id="modal_delete_'.$utilNumber->getId().'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-uppercase" style="color:#ffff;" >'.$utilNumber->getName().'</h5>
+                                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </a>
+                            </div>
+                            <div class="modal-body">
+                                <p>Voulez-vous vraiment supprimer '.$utilNumber->getName().'? Toutes les données liées à ce numéro utile seront définitivement supprimées!</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                                <a id="btn-delete-'.$utilNumber->getId().'" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="modal_edit_'.$utilNumber->getId().'" class="modal fade" id="form" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header border-bottom-0">
+                                <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un numéro utile</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            
+                            <div class="modal-body">
+                            <form id="edit_form_'.$utilNumber->getId().'" action="">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <div class="form-group">
+                                            <label for="name">Nom</label>
+                                            <input type="text" name="name" id="name-'.$utilNumber->getId().'" class="form-control" value="'.$utilNumber->getName().'">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <div class="form-group">
+                                            <label for="phone">Téléphone</label>
+                                            <input type="text" name="phone" id="name-'.$utilNumber->getId().'" class="form-control" value="'.$utilNumber->getPhone().'">
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="utilNumber" value="'.$utilNumber->getId().'">
+                             </form>
+                            </div>
+                            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <button type="submit" id="edit-btn-'.$utilNumber->getId().'" class="btn btn-warning">Modifier</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+             </tr>
+            ';
+            }
+            return new JsonResponse(['utilNumber' => $utilNumber->getId(), 'row' => $row]);
+        }
+
+        return $this->render('backend/utilNumbers/index.html.twig', [
+            'utilNumbers' => $this->manager->getRepository(UtilNumber::class)->findBy([], ['id' => 'DESC']),
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * 
+     * @Route("/util-numbers/delete", name="utilNumber_remove")
+     */
+    public function utilNumberRemove(Request $request)
+    {   
+        if($request->isXmlHttpRequest() && $request->get('utilNumber')){
+            $utilNumber = $this->manager->getRepository(UtilNumber::class)->find($request->get('utilNumber'));
+            
+            if($utilNumber->getId()){
+
+                $id = $utilNumber->getId();
+
+                $this->manager->remove($utilNumber);
+                $this->manager->flush();
+
+              return new JsonResponse(['utilNumber' => $id]);
+
+            }
+        }
+
+        return null;
+    }
     
     /**
      * Returns a JSON string with the neighborhoods of the City with the providen id.
