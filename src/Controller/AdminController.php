@@ -24,7 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * 
+ * @IsGranted("ROLE_ADMIN")
  * @Route("/presidence/admin/phone-book")
  */
 class AdminController extends AbstractController
@@ -38,7 +38,7 @@ class AdminController extends AbstractController
    
     }
 
-    /**@IsGranted("ROLE_ADMIN")
+    /**
      * @Route("/", name="dashboard")
      */
     public function index(): Response
@@ -50,7 +50,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    /**@IsGranted("ROLE_ADMIN")
+    /**
      * @Route("/agents", name="agents")
      */
     public function agents(Request $request): Response
@@ -533,7 +533,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-        /**@IsGranted("ROLE_ADMIN")
+        /**
      * @Route("/agents/delete", name="agent_remove")
      */
     public function agentRemove(Request $request)
@@ -557,7 +557,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Route("/entities", name="entities")
      */
     public function entities(Request $request): Response
@@ -662,7 +662,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Route("/entities/delete", name="entity_remove")
      */
     public function entityRemove(Request $request)
@@ -686,7 +686,7 @@ class AdminController extends AbstractController
     }
 
         /**
-         * @IsGranted("ROLE_ADMIN")
+         * 
      * @Route("/units", name="units")
      */
     public function units(Request $request): Response
@@ -904,7 +904,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Route("/units/delete", name="unit_remove")
      */
     public function unitRemove(Request $request)
@@ -930,7 +930,7 @@ class AdminController extends AbstractController
 
 
             /**
-             * @IsGranted("ROLE_ADMIN")
+             * 
      * @Route("/directions", name="directions")
      */
     public function directions(Request $request): Response
@@ -1149,7 +1149,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Route("/directions/delete", name="direction_remove")
      */
     public function DirectionRemove(Request $request)
@@ -1175,7 +1175,7 @@ class AdminController extends AbstractController
 
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Route("/departments", name="departments")
      */
     public function departments(Request $request): Response
@@ -1394,7 +1394,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Route("/departments/delete", name="department_remove")
      */
     public function DepartmentRemove(Request $request)
@@ -1420,7 +1420,7 @@ class AdminController extends AbstractController
 
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Route("/fonctions", name="fonctions")
      */
     public function fonctions(Request $request): Response
@@ -1639,7 +1639,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * 
      * @Route("/fonctions/delete", name="fonction_remove")
      */
     public function fonctionRemove(Request $request)
