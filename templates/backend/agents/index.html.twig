@@ -416,12 +416,10 @@
                 number: true,
                 maxlength: 4,
                 minlength: 4,
-                postExist: true
             },
             'email': {
                 required: true,
                 email: true,
-                emailExist: true
             },
             'fonction': {
                 required: true,
@@ -615,7 +613,7 @@
         var unitSelector = $(this);
         
         $.ajax({
-            url: "{{ path('get_units_from_entity') }}",
+            url: "{{ path('get_units_from_entitys') }}",
             type: "GET",
             dataType: "JSON",
             data: {
@@ -646,7 +644,7 @@
         
         // Request the neighborhoods of the selected city.
         $.ajax({
-            url: "{{ path('get_directions_from_unit') }}",
+            url: "{{ path('get_directions_from_units') }}",
             type: "GET",
             dataType: "JSON",
             data: {
@@ -673,7 +671,7 @@
          $('[id^=direction]').change(function () {
         var departmentSelector = $(this);
         $.ajax({
-            url: "{{ path('get_departments_from_direction') }}",
+            url: "{{ path('get_departments_from_directions') }}",
             type: "GET",
             dataType: "JSON",
             data: {
@@ -700,7 +698,7 @@
         $('[id^=department]').change(function () {
         var serviceSelector = $(this);
           $.ajax({
-            url: "{{ path('get_services_from_department') }}",
+            url: "{{ path('get_services_from_departments') }}",
             type: "GET",
             dataType: "JSON",
             data: {
