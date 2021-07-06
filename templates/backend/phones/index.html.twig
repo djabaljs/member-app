@@ -1,5 +1,5 @@
 {% extends "admin_template.html.twig" %}
-{% block title %}{{ parent() }} |UNITES{% endblock %}
+{% block title %}{{ parent() }} |TELEPHONE{% endblock %}
 {% block head %}
 {% block stylesheets %}
 
@@ -15,7 +15,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Numéros utiles</a></li>
+                    <li class="breadcrumb-item"><a href="#">Téléphones</a></li>
                     <li class="breadcrumb-item active">Dashboard</li>
                 </ol>
             </div><!-- /.col -->
@@ -40,77 +40,93 @@
             <div class="card card-outline card-info">
                 <div class="">
                     <div class="card-header">
-                        <h3 class="card-title">Liste des numéros utiles</h3>
+                        <h3 class="card-title">Liste des numéros téléphones</h3>
                     </div>
 
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>N°</th>
-                                <th>Noms</th>
+                                <th>Services</th>
+                                <th>Téléphones</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="table-content">
-                            {% for utilNumber in  utilNumbers %}
-                            <tr id="tr-{{utilNumber.id}}">
+                            {% for phone in  phones %}
+                            <tr id="tr-{{phone.id}}">
                                 <td>{{ loop.index }}</td>
-                                <td>{{ utilNumber.name }}</td>
+                                <td>{{ phone.utilNumber.name }}</td>
+                                <td id="td-{{phone.id}}">{{ phone.number }}</td>
                                 <td >
-                                    <a type="submit" id="btn-modify-{{utilNumber.id}}"
+                                    <a type="submit" id="btn-modify-{{phone.id}}"
                                         class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
-                                    <a type="submit" id="delete-{{utilNumber.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
+                                    <a type="submit" id="delete-{{phone.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
                                         data-target="#modal-danger">Supprimer 
                                         <i class="fa fa-trash"></i></a>
 
                                 </td>
                             </tr>
-                             <div class="modal fade" id="modal_delete_{{utilNumber.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                             <div class="modal fade" id="modal_delete_{{phone.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{utilNumber.name}}</h5>
+                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{phone.number}}</h5>
                                             <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </a>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Voulez-vous vraiment supprimer {{utilNumber.name}}? Toutes les données liées à ce numéro seront définitivement supprimées!</p>
+                                            <p>Voulez-vous vraiment supprimer {{phone.number}}? Toutes les données liées à ce numéro de téléphone seront définitivement supprimées!</p>
                                         </div>
                                         <div class="modal-footer">
                                             <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
-                                            <a id="btn-delete-{{utilNumber.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                                            <a id="btn-delete-{{phone.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div id="modal_edit_{{utilNumber.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
+                            <div id="modal_edit_{{phone.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header border-bottom-0">
-                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un numéro utile</h5>
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un numéro de téléphone</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         
                                         <div class="modal-body">
-                                        <form id="edit_form_{{utilNumber.id}}" action="{{path('entities')}}">
+                                        <form id="edit_form_{{phone.id}}" action="{{path('entities')}}">
                                             <div class="row">
-                                             <div class="col-md-12 col-sm-12 col-xs-12">
+                                             <div class="col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-group">
-                                                        <label for="name">Nom</label>
-                                                        <input type="text" name="name" placeholder="Nom" class="form-control"/>
+                                                        <label for="service">Service</label>
+                                                        <select name="utilNumber" class="form-control">
+                                                         {% for utilNumber in utilNumbers %}
+                                                          {% if phone.utilNumber.id == utilNumber.id %} 
+                                                          <option value="{{utilNumber.id}}" selected>{{utilNumber.name}}</option>
+                                                          {% else %}
+                                                          <option value="{{utilNumber.id}}">{{utilNumber.name}}</option>
+                                                          {% endif %}
+                                                         {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="number">Téléphone</label>
+                                                        <input type="text" name="number" id="name-{{phone.id}}" class="form-control" value="{{phone.number}}">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="utilNumber" value="{{utilNumber.id}}">
+                                            <input type="hidden" name="phone" value="{{phone.id}}">
                                          </form>
                                         </div>
                                         <div class="modal-footer border-top-0 d-flex justify-content-center">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                            <button type="submit" id="edit-btn-{{utilNumber.id}}" class="btn btn-warning">Modifier</button>
+                                            <button type="submit" id="edit-btn-{{phone.id}}" class="btn btn-warning">Modifier</button>
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +147,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter une unité</h5>
+                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter un numéro de téléphone</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -140,13 +156,19 @@
             }}
             <div class="modal-body">
                  <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="name">Nom</label>
-                            {{ form_row(form.name, {attr:{'class':'form-control','placeholder':'Nom' }})
+                            <label for="utilNumber">Service</label>
+                            {{ form_row(form.utilNumber, {attr:{'class':'form-control','placeholder':'Nom' }})
                             }}
                         </div>
                     </div>
+                     <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="number">Téléphone</label>
+                            {{ form_row(form.number, {attr:{'class':'form-control','placeholder':'Téléphone' }})
+                            }}
+                        </div>
                 </div>
                 </div>
             <div class="modal-footer border-top-0 d-flex justify-content-center">
@@ -195,11 +217,11 @@
         e.preventDefault();
         if ($('#add_form').valid()) {
             $.ajax({
-                url: '{{ path("utilNumbers") }}',
+                url: '{{ path("phones") }}',
                 method: 'POST',
                 data: $('#add_form').serialize(),
                 success: function (response) {
-                    if (response.utilNumber) {
+                    if (response.phone) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -216,7 +238,7 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Numéro utile ajouté avec succès'
+                            title: 'Téléphone ajouté avec succès'
                         });
                         $("#example1 tbody").
                         html(response.row);
@@ -240,11 +262,11 @@
        
           if ($('#edit_form_'+id).valid()) {
             $.ajax({
-                url: '{{ path("utilNumbers") }}',
+                url: '{{ path("phones") }}',
                 method: 'POST',
                 data: $('#edit_form_'+id).serialize(),
                 success: function (response) {
-                    if (response.utilNumber) {
+                    if (response.phone) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -261,7 +283,7 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Numéro utile modifié avec succès'
+                            title: 'Téléphone modifié avec succès'
                         });
                        $("#example1 tbody").
                         html(response.row);
@@ -280,11 +302,11 @@
         var subStr = str.substr(11, 12);
        
             $.ajax({
-                url: '{{ path("utilNumber_remove") }}',
+                url: '{{ path("phone_remove") }}',
                 method: 'POST',
-                data: {'utilNumber': subStr},
+                data: {'phone': subStr},
                 success: function (response) {
-                    if (response.utilNumber) {
+                    if (response.phone) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -301,10 +323,10 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Numéro utile supprimé avec succès'
+                            title: 'Téléphone supprimé avec succès'
                         });
                         
-                         $('#tr-'+response.utilNumber).remove();
+                         $('#tr-'+response.phone).remove();
                     }
                 }
             })

@@ -26,10 +26,15 @@
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css') }}">
+       <!-- DataTables -->
+    <link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
   {% block stylesheets %}{% endblock %}
 </head>
 <body class="hold-transition login-page">
 {% block body %}{% endblock %}
+
 
 <nav class="navbar fixed-bottom  navbar-expand-lg navbar-light bg-light">
   <div class="offset-4 col-4">
@@ -39,44 +44,31 @@
           
   </div>
   <div class="col-4">
-      <a href="{{path('app_login')}}"><i style="font-size:30px; color:#ed8000"  class="fa fa-sign-out-alt mr-auto"></i></a>
+      <a href="{{path('app_login')}}"><i style="font-size:20px; color:#ed8000"  class="fa fa-sign-out-alt mr-auto"></i></a>
+      <a type="button" id="book-btn" data-toggle="modal" data-target="#exampleModal"><i style="font-size:20px; color:#ed8000"  class="fa fa-book ml-3"></i></a>
+      <!-- Modal -->
   </div>  
 </nav>
-<!-- jQuery -->
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
-<!-- Bootstrap 4 -->
-<script src="{{asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
- <script src="{{asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
-  <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-  <script src="{{asset('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
-  <script src="{{asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
-  <script src="{{asset('plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
-  <script src="{{asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
-  <script src="{{asset('plugins/jszip/jszip.min.js')}}"></script>
-  <script src="{{asset('plugins/pdfmake/pdfmake.min.js')}}"></script>
-  <script src="{{asset('plugins/pdfmake/vfs_fonts.js')}}"></script>
-  <script src="{{asset('plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
-  <script src="{{asset('plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
-  <script src="{{asset('plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
-<!-- AdminLTE App -->
+
+    <!-- jQuery -->
+    <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+   <!-- Bootstrap 4 -->
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}">y
 <script src="{{asset('dist/js/adminlte.min.js')}}"></script>
 {% block javascripts %}{% endblock %}
 <script>
-  $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });
+    $('#modal_util_number').show();
+
+  $('#book-btn').click(function(){
+    $('#modal_util_number').show();
+  })
+
 </script>
 </body>
 </html>

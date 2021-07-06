@@ -9,6 +9,7 @@ use App\Entity\Service;
 use App\Entity\Direction;
 use App\Entity\Department;
 use App\Entity\SpecificSearch;
+use App\Entity\UtilNumber;
 use App\Form\SpecificSearchType;
 use App\Repository\AgentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,6 +42,7 @@ class UserController extends AbstractController
 
         return $this->render('frontend/index.html.twig', [
             'form' => $form->createView(),
+            'utilNumbers' => $this->manager->getRepository(UtilNumber::class)->findAll()
         ]);
     }
 
@@ -73,6 +75,10 @@ class UserController extends AbstractController
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                       </div>
                       <div class="modal-body">
+                      <div class="col-12">
+                      <img class="img-fluid " src="http://localhost:8000/imgs/header.jpg"/>
+                      </div>
+                      <div class="col-12">
                       <div class="card mb-3">
                       <div class="row g-0">
                         <div class="col-md-4">
@@ -88,7 +94,8 @@ class UserController extends AbstractController
                           </div>
                         </div>
                       </div>
-                    </div>
+                     </div>
+                      </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -137,6 +144,10 @@ class UserController extends AbstractController
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                       </div>
                       <div class="modal-body">
+                      <div class="col-12">
+                        <img class="img-fluid " src="http://localhost:8000/imgs/header.jpg"/>
+                      </div>
+                      <div class="col-12">
                       <div class="card mb-3">
                       <div class="row g-0">
                         <div class="col-md-4">
@@ -152,7 +163,8 @@ class UserController extends AbstractController
                           </div>
                         </div>
                       </div>
-                    </div>
+                     </div>
+                      </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
