@@ -19,6 +19,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class AgentType extends AbstractType
 {
@@ -41,7 +42,7 @@ class AgentType extends AbstractType
                 'label' => false,
                 'required' => true
             ])
-            ->add('post', TextType::class, [
+            ->add('post', NumberType::class, [
                 'label' => false,
                 'required' => true
             ])
