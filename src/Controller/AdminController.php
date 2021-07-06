@@ -12,9 +12,11 @@ use App\Form\EntityType;
 use App\Entity\Direction;
 use App\Form\ServiceType;
 use App\Entity\Department;
+use App\Entity\Phone;
 use App\Entity\UtilNumber;
 use App\Form\DirectionType;
 use App\Form\DepartmentType;
+use App\Form\PhoneType;
 use App\Form\UtilNumberType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -1691,7 +1693,6 @@ class AdminController extends AbstractController
            <tr id="tr-'.$utilNumber->getId().'">
            <td>'.($key+1).'</td>
             <td id="td-'.$utilNumber->getId().'">'.$utilNumber->getName().'</td>
-            <td id="td-'.$utilNumber->getId().'">'.$utilNumber->getPhone().'</td>
            <td >
                <a type="submit" id="btn-modify-'.$utilNumber->getId().'"
                    class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
@@ -1731,16 +1732,10 @@ class AdminController extends AbstractController
                            <div class="modal-body">
                            <form id="edit_form_'.$utilNumber->getId().'" action="">
                                <div class="row">
-                                   <div class="col-md-6 col-sm-6 col-xs-6">
+                                   <div class="col-md-12 col-sm-12 col-xs-12">
                                        <div class="form-group">
                                            <label for="name">Nom</label>
                                            <input type="text" name="name" id="name-'.$utilNumber->getId().'" class="form-control" value="'.$utilNumber->getName().'">
-                                       </div>
-                                   </div>
-                                   <div class="col-md-6 col-sm-6 col-xs-6">
-                                       <div class="form-group">
-                                           <label for="phone">Téléphone</label>
-                                           <input type="text" name="phone" id="name-'.$utilNumber->getId().'" class="form-control" value="'.$utilNumber->getPhone().'">
                                        </div>
                                    </div>
                                </div>
@@ -1817,16 +1812,10 @@ class AdminController extends AbstractController
                             <div class="modal-body">
                             <form id="edit_form_'.$utilNumber->getId().'" action="">
                                 <div class="row">
-                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <label for="name">Nom</label>
                                             <input type="text" name="name" id="name-'.$utilNumber->getId().'" class="form-control" value="'.$utilNumber->getName().'">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-6">
-                                        <div class="form-group">
-                                            <label for="phone">Téléphone</label>
-                                            <input type="text" name="phone" id="name-'.$utilNumber->getId().'" class="form-control" value="'.$utilNumber->getPhone().'">
                                         </div>
                                     </div>
                                 </div>
@@ -1877,6 +1866,248 @@ class AdminController extends AbstractController
         return null;
     }
     
+
+
+            /**
+         * 
+     * @Route("/phones", name="phones")
+     */
+    public function phones(Request $request): Response
+    {   
+        $phone = new Phone();
+        $form = $this->createForm(PhoneType::class, $phone);
+        $form->handleRequest($request);
+      
+        if($request->isXmlHttpRequest() && !$request->get('number')){
+
+           $this->manager->persist($phone);
+           $this->manager->flush();
+
+           $phones = $this->manager->getRepository(Phone::class)->findBy([], ['id' => 'DESC']);
+           $utilNumbers = $this->manager->getRepository(UtilNumber::class)->findBy([], ['id' => 'DESC']);
+           $row = '';
+           foreach($phones as $key => $phone){
+            $option = "";
+            foreach($utilNumbers as $utilNumber){
+                if($utilNumber->getId() === $phone->getUtilNumber()->getId()){
+                    $option .= "<option value=".$utilNumber->getId()." selected>".$utilNumber->getName()."</option>";
+                }else{
+                    $option .= "<option value=".$utilNumber->getId().">".$utilNumber->getName()."</option>";
+                }
+            }
+
+           $row .= '
+           <tr id="tr-'.$phone->getId().'">
+           <td>'.($key+1).'</td>
+           <td>'.$phone->getUtilNumber()->getName().'</td>
+           <td id="td-'.$phone->getId().'">'.$phone->getNumber().'</td>
+           <td >
+               <a type="submit" id="btn-modify-'.$phone->getId().'"
+                   class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+               <a type="submit" id="delete-'.$phone->getId().'" class="btn btn-danger btn-sm"  data-toggle="modal"
+                   data-target="#modal-danger">Supprimer 
+                   <i class="fa fa-trash"></i></a>
+                   <div class="modal fade" id="modal_delete_'.$phone->getId().'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog" role="document">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h5 class="modal-title text-uppercase" style="color:#ffff;" >'.$phone->getNumber().'</h5>
+                               <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span>
+                               </a>
+                           </div>
+                           <div class="modal-body">
+                               <p>Voulez-vous vraiment supprimer '.$phone->getNumber().'? Toutes les données liées à ce numéro de téléphone seront définitivement supprimées!</p>
+                           </div>
+                           <div class="modal-footer">
+                               <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                               <a id="btn-delete-'.$phone->getId().'" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div id="modal_edit_'.$phone->getId().'" class="modal fade" id="form" tabindex="-1" role="dialog"
+                   aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                       <div class="modal-content">
+                           <div class="modal-header border-bottom-0">
+                               <h5 class="modal-title text-center" id="exampleModalLabel">Modifier une entité</h5>
+                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span>
+                               </button>
+                           </div>
+                           
+                           <div class="modal-body">
+                           <form id="edit_form_'.$phone->getId().'" action="">
+                               <div class="row">
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                    <div class="form-group">
+                                        <label for="utilNumber">Service</label>
+                                        <select name="utilNumber" class="form-control">
+                                            '. $option .'
+                                        </select>
+                                    </div>
+                                </div>
+                                   <div class="col-md-6 col-sm-16col-xs-6">
+                                       <div class="form-group">
+                                           <label for="number">Téléphone</label>
+                                           <input type="text" name="number" id="name-'.$phone->getId().'" class="form-control" value="'.$phone->getNumber().'">
+                                       </div>
+                                   </div>
+                               </div>
+                               <input type="hidden" name="phone" value="'.$phone->getId().'">
+                            </form>
+                           </div>
+                           <div class="modal-footer border-top-0 d-flex justify-content-center">
+                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                               <button type="submit" id="edit-btn-'.$phone->getId().'" class="btn btn-warning">Modifier</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </td>
+            </tr>
+           ';
+           }
+           return new JsonResponse(['phone' => $phone->getId(), 'row' => $row]);
+        }elseif($request->isXmlHttpRequest() && $request->get('phone')){
+       
+            $phone = $this->manager->getRepository(Phone::class)->find($request->get('phone'));
+  
+            $utilNumber = $this->manager->getRepository(UtilNumber::class)->find($request->get('utilNumber'));
+          
+            $phone->setNumber($request->get('number'));
+            $phone->setUtilNUmber($utilNumber);
+            
+            
+            $this->manager->persist($phone);
+            $this->manager->flush();
+
+
+            $phones = $this->manager->getRepository(Phone::class)->findBy([], ['id' => 'DESC']);
+            $utilNumbers = $this->manager->getRepository(UtilNumber::class)->findBy([], ['id' => 'DESC']);
+           
+            $row = '';
+            foreach($phones as $key => $phone){
+             $option = "";
+             foreach($utilNumbers as $utilNumber){
+                 if($utilNumber->getId() === $phone->getUtilNumber()->getId()){
+                     $option .= "<option value=".$utilNumber->getId()." selected>".$utilNumber->getName()."</option>";
+                 }else{
+                     $option .= "<option value=".$utilNumber->getId().">".$utilNumber->getName()."</option>";
+                 }
+             }
+ 
+            $row .= '
+            <tr id="tr-'.$phone->getId().'">
+            <td>'.($key+1).'</td>
+            <td>'.$phone->getUtilNumber()->getName().'</td>
+            <td id="td-'.$phone->getId().'">'.$phone->getNumber().'</td>
+            <td >
+                <a type="submit" id="btn-modify-'.$phone->getId().'"
+                    class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+                <a type="submit" id="delete-'.$phone->getId().'" class="btn btn-danger btn-sm"  data-toggle="modal"
+                    data-target="#modal-danger">Supprimer 
+                    <i class="fa fa-trash"></i></a>
+                    <div class="modal fade" id="modal_delete_'.$phone->getId().'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-uppercase" style="color:#ffff;" >'.$phone->getNumber().'</h5>
+                                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </a>
+                            </div>
+                            <div class="modal-body">
+                                <p>Voulez-vous vraiment supprimer '.$phone->getNumber().'? Toutes les données liées à ce numéro de téléphone seront définitivement supprimées!</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                                <a id="btn-delete-'.$phone->getId().'" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="modal_edit_'.$phone->getId().'" class="modal fade" id="form" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header border-bottom-0">
+                                <h5 class="modal-title text-center" id="exampleModalLabel">Modifier une entité</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            
+                            <div class="modal-body">
+                            <form id="edit_form_'.$phone->getId().'" action="">
+                                <div class="row">
+                                     <div class="col-md-6 col-sm-6 col-xs-6">
+                                     <div class="form-group">
+                                         <label for="utilNumber">Service</label>
+                                         <select name="utilNumber" class="form-control">
+                                             '. $option .'
+                                         </select>
+                                     </div>
+                                 </div>
+                                    <div class="col-md-6 col-sm-16col-xs-6">
+                                        <div class="form-group">
+                                            <label for="number">Téléphone</label>
+                                            <input type="text" name="number" id="name-'.$phone->getId().'" class="form-control" value="'.$phone->getNumber().'">
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="phone" value="'.$phone->getId().'">
+                             </form>
+                            </div>
+                            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <button type="submit" id="edit-btn-'.$phone->getId().'" class="btn btn-warning">Modifier</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+             </tr>
+            ';
+            }
+
+          
+           return new JsonResponse(['phone' => $phone->getId(), 'row' => $row]);
+        }
+
+        return $this->render('backend/phones/index.html.twig', [
+            'phones' => $this->manager->getRepository(Phone::class)->findBy([], ['id' => 'DESC']),
+            'form' => $form->createView(),
+            'utilNumbers' => $this->manager->getRepository(UtilNumber::class)->findBy([], ['id' => 'DESC'])
+        ]);
+    }
+
+    /**
+     * 
+     * @Route("/phones/delete", name="phone_remove")
+     */
+    public function phoneRemove(Request $request)
+    {   
+        if($request->isXmlHttpRequest() && $request->get('phone')){
+            $phone = $this->manager->getRepository(Phone::class)->find($request->get('phone'));
+            
+            if($phone->getId()){
+
+                $id = $phone->getId();
+
+                $this->manager->remove($phone);
+                $this->manager->flush();
+
+              return new JsonResponse(['phone' => $id]);
+
+            }
+
+        }
+
+        return null;
+    }
+
     /**
      * Returns a JSON string with the neighborhoods of the City with the providen id.
      * 

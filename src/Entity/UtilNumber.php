@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UtilNumberRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,9 +25,15 @@ class UtilNumber
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity=Phone::class, mappedBy="utilNumber")
      */
-    private $phone;
+    private $phones;
+
+    public function __construct()
+    {
+        $this->phones = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -44,15 +52,38 @@ class UtilNumber
         return $this;
     }
 
-    public function getPhone(): ?string
+    /**
+     * @return Collection|Phone[]
+     */
+    public function getPhones(): Collection
     {
-        return $this->phone;
+        return $this->phones;
     }
 
-    public function setPhone(string $phone): self
+    public function addPhone(Phone $phone): self
     {
-        $this->phone = $phone;
+        if (!$this->phones->contains($phone)) {
+            $this->phones[] = $phone;
+            $phone->setUtilNumber($this);
+        }
 
         return $this;
+    }
+
+    public function removePhone(Phone $phone): self
+    {
+        if ($this->phones->removeElement($phone)) {
+            // set the owning side to null (unless already changed)
+            if ($phone->getUtilNumber() === $this) {
+                $phone->setUtilNumber(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }
