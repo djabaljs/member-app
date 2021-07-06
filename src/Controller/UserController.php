@@ -38,9 +38,10 @@ class UserController extends AbstractController
 
         $form = $this->createForm(SpecificSearchType::class, $specificSearch);
         $form->handleRequest($request);
-
+        
         return $this->render('frontend/index.html.twig', [
             'form' => $form->createView(),
+            'utilNumbers' => $this->manager->getRepository();
         ]);
     }
 
