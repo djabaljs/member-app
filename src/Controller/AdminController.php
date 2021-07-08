@@ -671,13 +671,14 @@ class AdminController extends AbstractController
      */
     public function entityRemove(Request $request)
     {   
+      
         if($request->isXmlHttpRequest() && $request->get('entity')){
             $entity = $this->manager->getRepository(Entity::class)->find($request->get('entity'));
-            
+           
             if($entity->getId()){
 
                 $id = $entity->getId();
-
+                
                 $this->manager->remove($entity);
                 $this->manager->flush();
 
