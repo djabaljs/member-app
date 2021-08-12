@@ -32,20 +32,21 @@ class Agent
     private $lastName;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      * @Assert\NotBlank
      * @Assert\Positive
      */
     private $post;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Email
      */
     private $email;
 
     /**
      * @ORM\ManyToOne(targetEntity=Service::class, inversedBy="agents")
+     * @ORM\JoinColumn(name="service_id", referencedColumnName="id", nullable="true")
      */
     private $fonction;
 

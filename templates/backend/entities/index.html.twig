@@ -304,6 +304,9 @@
                         
                          $('#tr-'+response.entity).remove();
                     }
+                },
+                error: function(){
+                    alert('Une erreur s\'est produite lors de la suppression.');
                 }
             })
     })

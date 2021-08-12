@@ -406,19 +406,17 @@
     form.validate({
         rules: {
             'firstName': {
-                required: true
+                required: false
             },
             'lastName': {
-                required: true
+                required: false
             },
             'post': {
                 required: true,
                 number: true,
-                maxlength: 4,
-                minlength: 4,
             },
             'email': {
-                required: true,
+                required: false,
                 email: true,
             },
             'fonction': {
@@ -451,14 +449,10 @@
             'post': {
                 required: 'N° post obligatoire',
                 number: 'Entrer un nombre',
-                maxlength: 'N° poste invalide',
-                minlength: 'N° poste invalide',
-                remote: $.validator.format("{0} est déjà associé à un compte")
             },
             'email': {
                 required: 'Email obligatoire',
                 email: 'Entrer un email valide',
-                remote: $.validator.format("{0} est déjà associé à un agent")
             },
             'fonction': {
                 required: 'Fonction obligatoire',
