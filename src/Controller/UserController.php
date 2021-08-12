@@ -63,7 +63,7 @@ class UserController extends AbstractController
                 $content .= '<td>'.$agent->getPost().'</td>';
                 $content .= '<td>'.$agent->getEmail().'</td>';
                 $content .= '<td>'.$agent->getFonction().'</td>';
-                $content .= '<td><img type="button" id="agent-detail-'.$agent->getId().'" src="http://localhost:8000/imgs/browsesmall.png"/>
+                $content .= '<td><img type="button" id="agent-detail-'.$agent->getId().'" src="http://annuaire.presidence.ci/imgs/browsesmall.png"/>
                 <!-- Modal -->
                 <div id="modal_agent_'.$agent->getId().'" class="modal fade" role="dialog">
                   <div class="modal-dialog modal-lg">
@@ -76,13 +76,13 @@ class UserController extends AbstractController
                       </div>
                       <div class="modal-body">
                       <div class="col-12">
-                      <img class="img-fluid " src="http://localhost:8000/imgs/header.jpg"/>
+                      <img class="img-fluid " src="http://annuaire.presidence.ci/imgs/header.jpg"/>
                       </div>
                       <div class="col-12">
                       <div class="card mb-3">
                       <div class="row g-0">
                         <div class="col-md-4">
-                          <img src="http://localhost:8000/imgs/user-default.jpeg" class="img-fluid rounded-start" alt="...">
+                          <img src="http://annuaire.presidence.ci/imgs/user-default.jpeg" class="img-fluid rounded-start" alt="...">
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
@@ -132,7 +132,7 @@ class UserController extends AbstractController
                 $content .= '<td>'.$agent->getPost().'</td>';
                 $content .= '<td>'.$agent->getEmail().'</td>';
                 $content .= '<td>'.$agent->getFonction().'</td>';
-                $content .= '<td><img type="button" id="agent-detail-'.$agent->getId().'" src="http://localhost:8000/imgs/browsesmall.png"/>
+                $content .= '<td><img type="button" id="agent-detail-'.$agent->getId().'" src="http://annuaire.presidence.ci/imgs/browsesmall.png"/>
                 <!-- Modal -->
                 <div id="modal_agent_'.$agent->getId().'" class="modal fade" role="dialog">
                   <div class="modal-dialog modal-lg">
@@ -145,13 +145,13 @@ class UserController extends AbstractController
                       </div>
                       <div class="modal-body">
                       <div class="col-12">
-                        <img class="img-fluid " src="http://localhost:8000/imgs/header.jpg"/>
+                        <img class="img-fluid " src="http://annuaire.presidence.ci/imgs/header.jpg"/>
                       </div>
                       <div class="col-12">
                       <div class="card mb-3">
                       <div class="row g-0">
                         <div class="col-md-4">
-                          <img src="http://localhost:8000/imgs/user-default.jpeg" class="img-fluid rounded-start" alt="...">
+                          <img src="http://annuaire.presidence.ci/imgs/user-default.jpeg" class="img-fluid rounded-start" alt="...">
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
