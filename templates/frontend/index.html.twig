@@ -14,23 +14,12 @@
 {% endblock %}
 {% block body %}
 
-<div class="container">
 
+<div class="container">
   <div class="row">
-    <div class="col-4 offset-4">
-      <img class="img-fluid " src="{{asset('imgs/logo2.png')}}"/>
-    </div>
-  </div>
-  <br/></br/>
-  <div class="row">
-    <div class="col-4">
-    <div class="col-12 col-xs-12 col-sm-12">
-     <button type="button" id="specific-search-btn" class="btn btn-success form-control">Recherche spécifique</button>
-    </div>
-    <div class="col-12">
-     <button type="button" id="standard-search-btn" class="btn btn-success form-control">Recherche standard</button>
-    </div>
-     <div class="col-12" id="specific_search">
+    <div class="col-md-2 col-xs-12 col-sm-12">
+    
+     <div class="col-12 col-12 col-xs-12 col-sm-12" id="specific_search">
      {{form_start(form)}}
        <br/>
        <div class="form-group">
@@ -50,16 +39,24 @@
        </div>
      {{form_end(form)}}
     </div>
+    
     <div>
-    <div class="col-12" id="standard_search">
+    <div class="col-12 col-xs-12 col-sm-12" id="standard_search">
      <br/>
      <input type="text" id="standard_input" placeholder="Rechercher par nom ou tout autre information..." class="form-control" />
      <div id="resultSearch"></div>
     </div>
+    <br>
+    <div class="col-md-12 col-xs-12 col-sm-12">
+     <button type="button" id="specific-search-btn" class="btn btn-success form-control">Recherche avancée</button>
+    </div>
+    <div class="col-12 col-12 col-xs-12 col-sm-12">
+     <button type="button" id="standard-search-btn" class="btn btn-success form-control">Recherche standard</button>
+    </div>
    </div>
      
   </div>
-<div class="col-8">
+  <div class="col-md-7 col-xs-12 col-sm-12">
     <section class="content" id="table_section">
       <div class="container-fluid">
         <div class="row">
@@ -106,43 +103,40 @@
       </div>
       <!-- /.container-fluid -->
     </section>
-  <div>
-</div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Numéros utiles</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <div class="col-12">
-        <img class="img-fluid " src="{{asset('imgs/header.jpg')}}"/>
-      </div>
-        {% for utilNumber in utilNumbers %}
-         <div>
-           <h3 class="text-success">{{utilNumber.name}}:</h3>
-             {% for phone in utilNumber.phones %}
-           <h5 class="ml-3">
-             {{phone.number}}
-           </h5>
-             {% endfor %}
-         </div>
-        {% endfor %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-      </div>
+  </div>
+  <div class="col-md-3 col-xs-12 col-sm-12">
+    <div class="content">
+      <div class="card" id="section_scroll">
+              <div class="card-header">
+                <h3 class="card-title">Numéro utiles</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                {% for utilNumber in utilNumbers %}
+              <div>
+                <h3 class="text-success"><strong>{{utilNumber.name}}:</strong></h3>
+                  {% for phone in utilNumber.phones %}
+                <h5 class="ml-3">
+                  {{phone.number}}
+                </h5>
+                  {% endfor %}
+              </div>
+              {% endfor %}
+              </div>
+              <!-- /.card-body -->
+            </div>
     </div>
   </div>
 </div>
+
 {% endblock %}
 {% block javascripts %}
  <script>
+
+ function preg_match (regex, str) {
+  return (new RegExp(regex).test(str))
+}
+
   $('#standard-search-btn').hide();
   $('#specific_search').hide();
   $('#specific-search-btn').click(function(){
@@ -161,7 +155,8 @@
       $('[id^=entity]').change(function () {
         var unitSelector = $(this);
         var entityText = $('#entity option:selected').text();
-       
+
+        
         // Request the neighborhoods of the selected city.
         $.ajax({
             url: "{{ path('get_units_from_entitys') }}",
@@ -388,6 +383,8 @@
   	});
 
     $('#standard_input').keyup(function(){
+
+     console.log($(this).val().match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/'))
     $.ajax({
         url: '{{path("standard_search")}}',
         type: 'POST',

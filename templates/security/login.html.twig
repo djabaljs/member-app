@@ -1,9 +1,59 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANNUAIRE|CONNEXION</title>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
-{% block title %}{{ parent() }}-CONNEXION{% endblock %}
+  <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.css"')}}" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Ionicons -->
+    {# <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'"> #}
+    <!-- Tempusdominus Bbootstrap 4 -->
+    <link rel="stylesheet"
+        href="{{ asset('plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{{ asset('plugins/jqvmap/jqvmap.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css') }}">
+       <!-- DataTables -->
+    <link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
+    <style>
+ body{
+   font-size: 12px;
+ }
+ .topHeader{
+   margin-top: -200px;
+   margin-bottom: 50px;
+   margin-left: 5px;
+   width: 99%  
+ }
+</style>
+</head>
+<body class="hold-transition login-page"
+>
+{# <header class="header">
+ <img class="img-fluid topHeader" src="{{asset('imgs/TopBackground.jpg')}}"/>
+</header> #}
 
-{% block body %}
-<div class="login-box">
+  <div class="login-box">
+    <div class="col-md-4 col-xs-12 col-sm-12">
+    <a href="/" style="font-size: 16px">>>> Accueil <<<</a>
+    </div>
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
@@ -18,12 +68,7 @@
             {{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a
-                href="{{ path('app_logout') }}">Logout</a>
-        </div>
-        {% endif %}
+        
 
         <div class="input-group mb-3">
          <input type="email" placeholder="Email" name="email" value="{{ last_username }}" required id="email" class="form-control">
@@ -63,4 +108,14 @@
   <!-- /.card -->
 </div>
 
-{% endblock %}
+<nav class="navbar fixed-bottom  navbar-expand-lg navbar-light bg-light">
+  <div class="offset-md-4 col-md-12 col-xs-12 col-sm-12">
+        
+          <p><strong>Copyright &copy; 2021-2022 <a style="color: #5fa53a;" href="https://www.presidence.ci/"> PRESIDENCE-CI</a>.</strong>
+          Tous les droits réservés.</p>
+          
+  </div>
+</nav>
+
+</body>
+</html>

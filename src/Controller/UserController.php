@@ -51,7 +51,7 @@ class UserController extends AbstractController
      */
     public function standardSearch(Request $request, AgentRepository $agentRepository)
     {   
-       if($request->get('search') != ''){
+       if(preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $request->get('search'))  === 0  && $request->get('search') != ''){
         $search = $request->get('search');
          $agents = $agentRepository->findAgentByStandardCriteria($search);
         
@@ -63,47 +63,7 @@ class UserController extends AbstractController
                 $content .= '<td>'.$agent->getPost().'</td>';
                 $content .= '<td>'.$agent->getEmail().'</td>';
                 $content .= '<td>'.$agent->getFonction().'</td>';
-                $content .= '<td><img type="button" id="agent-detail-'.$agent->getId().'" src="http://annuaire.presidence.ci/imgs/browsesmall.png"/>
-                <!-- Modal -->
-                <div id="modal_agent_'.$agent->getId().'" class="modal fade" role="dialog">
-                  <div class="modal-dialog modal-lg">
-                
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        Détails sur '.$agent->getFirstName().' '.$agent->getLastName().'
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      </div>
-                      <div class="modal-body">
-                      <div class="col-12">
-                      <img class="img-fluid " src="http://annuaire.presidence.ci/imgs/header.jpg"/>
-                      </div>
-                      <div class="col-12">
-                      <div class="card mb-3">
-                      <div class="row g-0">
-                        <div class="col-md-4">
-                          <img src="http://annuaire.presidence.ci/imgs/user-default.jpeg" class="img-fluid rounded-start" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                          <div class="card-body">
-                            <h3>'.$agent->getFirstName().' '.$agent->getLastName().'</h3>
-                            <p><strong>Département:</strong> '.$agent->getFonction()->getDepartment()->getName().'</p>
-                            <p><strong>Fonction:</strong> '.$agent->getFonction().'</p>
-                            <p><strong>Email:</strong> '.$agent->getEmail().'</p>
-                            <p><strong>N° Poste:</strong> '.$agent->getPost().'</p>
-                          </div>
-                        </div>
-                      </div>
-                     </div>
-                      </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                      </div>
-                    </div>
-                
-                  </div>
-                </td>';
+                $content .= '<td><a style="color: #ed8000; font-size: 16px" href = "mailto:'.$agent->getEmail().'"><i class="fa fa-envelope"></i></a></td>';
 
             $content .='<tr>';
              
@@ -120,7 +80,7 @@ class UserController extends AbstractController
      */
     public function specificSearch(Request $request, AgentRepository $agentRepository)
     {   
-       if($request->get('search') != ''){
+        if(preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $request->get('search'))  === 0  && $request->get('search') != ''){
         $search = $request->get('search');
          $agents = $agentRepository->findAgentBySpecificCriteria($search);
         
@@ -132,47 +92,7 @@ class UserController extends AbstractController
                 $content .= '<td>'.$agent->getPost().'</td>';
                 $content .= '<td>'.$agent->getEmail().'</td>';
                 $content .= '<td>'.$agent->getFonction().'</td>';
-                $content .= '<td><img type="button" id="agent-detail-'.$agent->getId().'" src="http://annuaire.presidence.ci/imgs/browsesmall.png"/>
-                <!-- Modal -->
-                <div id="modal_agent_'.$agent->getId().'" class="modal fade" role="dialog">
-                  <div class="modal-dialog modal-lg">
-                
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        Détails sur '.$agent->getFirstName().' '.$agent->getLastName().'
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      </div>
-                      <div class="modal-body">
-                      <div class="col-12">
-                        <img class="img-fluid " src="http://annuaire.presidence.ci/imgs/header.jpg"/>
-                      </div>
-                      <div class="col-12">
-                      <div class="card mb-3">
-                      <div class="row g-0">
-                        <div class="col-md-4">
-                          <img src="http://annuaire.presidence.ci/imgs/user-default.jpeg" class="img-fluid rounded-start" alt="...">
-                        </div>
-                        <div class="col-md-8">
-                          <div class="card-body">
-                            <h3>'.$agent->getFirstName().' '.$agent->getLastName().'</h3>
-                            <p><strong>Département:</strong> '.$agent->getFonction()->getDepartment()->getName().'</p>
-                            <p><strong>Fonction:</strong> '.$agent->getFonction().'</p>
-                            <p><strong>Email:</strong> '.$agent->getEmail().'</p>
-                            <p><strong>N° Poste:</strong> '.$agent->getPost().'</p>
-                          </div>
-                        </div>
-                      </div>
-                     </div>
-                      </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                      </div>
-                    </div>
-                
-                  </div>
-                </td>';
+                $content .= '<td><a style="color: #ed8000; font-size: 16px"  href = "mailto:'.$agent->getEmail().'"><i class="fa fa-envelope"></i></a></td>';
 
             $content .='<tr>';
              
