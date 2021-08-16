@@ -1,0 +1,477 @@
+{% extends "admin_template.html.twig" %}
+{% block title %}{{ parent() }}-TELEPHONIQUE{% endblock %}
+{% block head %}
+{% block stylesheets %}
+
+{% endblock %}
+{% endblock %}
+{% block body %}
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">Dashboard</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Administrateurs</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+
+<div class="container-fluid">
+    <div class="box-header">
+        <h3 class="box-title">
+            <div class="btn-group">
+                <button type="button" class="btn btn-block btn-success add_btn"><i
+                        class="glyphicon glyphicon-save"></i>
+                    Créer</button>
+            </div>
+        </h3>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-outline card-info">
+                <div class="">
+                    <div class="card-header">
+                        <h3 class="card-title">Liste des administrateurs</h3>
+                    </div>
+
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-content">
+                            {% for user in  users %}
+                            <tr id="tr-{{user.id}}">
+                                <td>{{ loop.index }}</td>
+                                <td>{{ user.firstname }}</td>
+                                <td>{{ user.lastname }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <a type="submit" id="btn-modify-{{user.id}}"
+                                        class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+                                     <a type="submit" id="delete-{{user.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
+                                        data-target="#modal-danger">Supprimer 
+                                        <i class="fa fa-trash"></i></a>
+
+                                </td>
+                            </tr>
+                              <div class="modal fade" id="modal_delete_{{user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{user.firstName}} {{user.lastName}}</h5>
+                                            <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </a>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Voulez-vous vraiment supprimer {{user.firstName}} {{user.lastName}}? Toutes les données liées à ce agent seront définitivement supprimées!</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                                            <a id="btn-delete-{{user.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="modal_edit_{{user.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header border-bottom-0">
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un administrateur</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="modal-body">
+                                        <form id="edit_form_{{user.id}}">
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="firstname">Nom</label>
+                                                        <input type="text" name="firstName" class="form-control" value="{{user.firstName}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="lastname">Prénom</label>
+                                                        <input type="text" name="lastName" class="form-control" value="{{user.lastName}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="email">Email</label>
+                                                     <input type="text" name="email" class="form-control" value="{{user.email}}">
+                                                    </div>
+                                                </div>
+                                                 <div class="col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="form-group">
+                                                        <label for="password">Mot de passe</label>
+                                                     <input type="password" name="password" class="form-control" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="userId" value="{{user.id}}">
+                                         </form>
+                                        </div>
+                                        <div class="modal-footer border-top-0 d-flex justify-content-center">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                            <button type="submit" id="edit-btn-{{user.id}}" class="btn btn-warning">Modifier</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.col-->
+   <div id="modal_add" class="modal fade" id="form" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter un administrateur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(form, {attr:{'id':'add_form' }})
+            }}
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="firstName">Nom</label>
+                            {{ form_row(form.firstName, {attr:{'class':'form-control','placeholder':'Nom' }})
+                            }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="lastName">Prénom</label>
+                            {{ form_row(form.lastName, {attr:{'class':'form-control','placeholder':'Prénom' }})
+                            }}
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="Email">Email</label>
+                            {{ form_row(form.email, {attr:{'class':'form-control','placeholder':'Email' }})
+                            }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            {{ form_row(form.password, {attr:{'class':'form-control','placeholder':'Mot de passe' }})
+                            }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-success register">Enregistrer</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script src=" {{ asset("js/validate.js") }}"></script>
+<script src="{{ asset("js/sweetAlert.js") }}"></script>
+<script>
+
+    $.validator.setDefaults({
+		errorClass: 'help-block',
+		errorPlacement: function (error, element) {
+			error.addClass("label");
+			error.css("background", "red", );
+			error.insertAfter(element.parent());
+		},
+		highlight: function (element, errorClass, validClass) {
+			$(element).parents(".row").addClass(errorClass);
+		},
+		unhighlight: function (element, errorClass, validClass) {
+			$(element).parent().next().remove();
+
+		}
+	});
+
+    $.validator.setDefaults({
+        debug: true,
+        success: "valid"
+    });
+
+
+    $('.add_btn').click(function () {
+        $('#modal_add').modal('show');
+    })
+
+    function modifyFunction(){
+    $( "[id^='btn-modify']" ).click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(11, 12);
+        $('#modal_edit_'+subStr).modal('show');
+    })
+    }
+
+
+    function deleteFunction(){
+    $( "[id^='delete-']" ).click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(7, 8);
+       $('#modal_delete_'+subStr).modal('show');
+    })
+    }
+    
+    $.validator.setDefaults({
+        debug: true,
+        success: "valid"
+    });
+
+    $.validator.addMethod('emailExist', function (value, element) {
+
+        $.post('{{ path("user-email", {email: "value"}) }}');
+        return console.log(value)
+    }, '');
+    var content = '';
+      $.validator.addMethod('postExist', function (value, element) {
+         
+         $.ajax({
+                url: '{{ path("user_post") }}',
+                method: 'POST',
+                data: {'post': value},
+                success: function (data) {
+                   var response = '';
+                    if(data.error){
+                        console.log(data.error)
+                        return data.error
+                    }
+                }
+            })
+    },'');
+
+    var form = $('#add_form');
+
+    form.validate({
+        rules: {
+            'firstName': {
+                required: false
+            },
+            'lastName': {
+                required: false
+            },
+            'email': {
+                required: false,
+                email: true,
+            },
+            'password': {
+                required: false,
+            },
+
+        },
+        messages: {
+            'firstName': {
+                required: 'Nom obligatoire'
+            },
+            'lastName': {
+                required: 'Prénom obligatoire'
+            },
+            'email': {
+                required: 'Email obligatoire',
+                email: 'Entrer un email valide',
+            },
+            'password': {
+                required: 'Mot de passe obligatoire',
+            }
+
+        }
+    });
+    function addElement(){
+    $('.register').click(function (e) {
+        e.preventDefault();
+        console.log($('#add_form').valid());
+        if ($('#add_form').valid()) {
+            $.ajax({
+                url: '{{ path("administrators") }}',
+                method: 'POST',
+                data: $('#add_form').serialize(),
+                success: function (response) {
+                    if (response.user) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Administrateur ajouté avec succès'
+                        });
+                        $("#example1 tbody").
+                        html(response.row);
+                        
+                        deleteFunction();
+                        updateElement();
+                        removeElement();
+                        modifyFunction();
+                        $('#add_form').trigger('reset');
+
+                    }else if(response.emailExist){
+                         const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'error',
+                            title: 'Cet email est utilisé par un autre utilisateur.'
+                        });
+                    }
+                }
+            })
+        }
+    })
+    }
+
+    function updateElement(){
+    $("[id^=edit-btn]").click(function(){
+        var str = $(this).attr("id");
+        var id = str.substr(9, 10);
+       
+          if ($('#edit_form_'+id).valid()) {
+            $.ajax({
+                url: '{{ path("administrators") }}',
+                method: 'POST',
+                data: $('#edit_form_'+id).serialize(),
+                success: function (response) {
+                    if (response.user) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Administrateur modifié avec succès'
+                        });
+                       $("#example1 tbody").
+                        html(response.row);
+
+                            deleteFunction();
+                            addElement();
+                            removeElement();
+                            modifyFunction();
+
+                    }
+                }
+            })
+        }
+    })
+    }
+
+    function removeElement(){
+    $("[id^=btn-delete-]").click(function(){
+        var str = $(this).attr("id");
+        var subStr = str.substr(11, 12);
+         
+            $.ajax({
+                url: '{{ path("administrators_remove") }}',
+                method: 'POST',
+                data: {'userId': subStr},
+                success: function (response) {
+                    if (response.user) {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            width: 300,
+                            timerProgressBar: true,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            },
+
+                        })
+
+                         Toast.fire({
+                            icon: 'success',
+                            title: 'Administrateur supprimé avec succès'
+                        });
+                        
+                         $('#tr-'+response.user).remove();
+                    }
+                }
+            })
+    })
+    }
+
+    function group(){
+    deleteFunction();
+    addElement();
+    updateElement();
+    removeElement();
+    modifyFunction();
+    }
+
+    group();
+
+    
+</script>
+{% endblock %}

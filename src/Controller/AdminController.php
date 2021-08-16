@@ -13,10 +13,12 @@ use App\Entity\Direction;
 use App\Form\ServiceType;
 use App\Entity\Department;
 use App\Entity\Phone;
+use App\Entity\User;
 use App\Entity\UtilNumber;
 use App\Form\DirectionType;
 use App\Form\DepartmentType;
 use App\Form\PhoneType;
+use App\Form\UserType;
 use App\Form\UtilNumberType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @IsGranted("ROLE_ADMIN")
@@ -2248,8 +2251,265 @@ class AdminController extends AbstractController
         
         // Return array with structure of the neighborhoods of the providen city id
         return new JsonResponse($responseArray);
-
+    }
         // e.g
         // [{"id":"3","name":"Treasure Island"},{"id":"4","name":"Presidio of San Francisco"}]
+
+    /**
+     * @Route("/administrators", name="administrators")
+     */
+    public function administrators(Request $request, UserPasswordEncoderInterface $encoder): Response
+    {  
+        $user = new User();
+      
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        
+        if($request->isXmlHttpRequest() && !$request->get('userId')){
+
+            $emailExist = $this->manager->getRepository(User::class)->findOneBy(['email' => $request->get('user')['email']]);
+
+            if($emailExist){
+                return new JsonResponse(['emailExist' => true]);
+            }
+
+            $user->setFirstName($request->get('user')['firstName']);
+            $user->setLastName($request->get('user')['lastName']);
+            $password = $encoder->encodePassword($user,$request->get('user')['password']);
+            $user->setEmail($request->get('user')['email']);
+            $user->setPassword($password);
+            
+           $this->manager->persist($user);
+           $this->manager->flush();
+
+           $users = $this->manager->getRepository(User::class)->findBy([], ['id' => 'DESC']);
+
+           $row = '';
+           foreach($users as $key => $user){
+
+            $row .= '
+           <tr id="tr-'.$user->getId().'">
+           <td>'.($key+1).'</td>
+           <td>'.$user->getFirstName().'</td>
+           <td>'.$user->getLastName().'</td>
+           <td>'.$user->getEmail().'</td>
+           <td >
+               <a type="submit" id="btn-modify-'.$user->getId().'"
+                   class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+               <a type="submit" id="delete-'.$user->getId().'" class="btn btn-danger btn-sm"  data-toggle="modal"
+                   data-target="#modal-danger">Supprimer 
+                   <i class="fa fa-trash"></i></a>
+                   <div class="modal fade" id="modal_delete_'.$user->getId().'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog" role="document">
+                       <div class="modal-content">
+                           <div class="modal-header">
+                               <h5 class="modal-title text-uppercase" style="color:#ffff;" >'.$user->getFirstName().' '.$user->getLastName().'</h5>
+                               <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span>
+                               </a>
+                           </div>
+                           <div class="modal-body">
+                               <p>Voulez-vous vraiment supprimer '.$user->getFirstName().' '.$user->getLastName().'? Toutes les données liées à cette entité seront définitivement supprimées!</p>
+                           </div>
+                           <div class="modal-footer">
+                               <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                               <a id="btn-delete-'.$user->getId().'" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div id="modal_edit_'.$user->getId().'" class="modal fade" id="form" tabindex="-1" role="dialog"
+                   aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                       <div class="modal-content">
+                           <div class="modal-header border-bottom-0">
+                               <h5 class="modal-title text-center" id="exampleModalLabel">Modifier une entité</h5>
+                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span>
+                               </button>
+                           </div>
+                           
+                           <div class="modal-body">
+                           <form id="edit_form_'.$user->getId().'">
+                               <div class="row">
+                                   <div class="col-md-6 col-sm-6 col-xs-6">
+                                       <div class="form-group">
+                                           <label for="firstname">Nom</label>
+                                           <input type="text" name="firstName" class="form-control" value="'.$user->getFirstName().'">
+                                       </div>
+                                   </div>
+                                   <div class="col-md-6 col-sm-6 col-xs-6">
+                                       <div class="form-group">
+                                           <label for="lastname">Prénom</label>
+                                           <input type="text" name="lastName" class="form-control" value="'.$user->getLastName().'">
+                                       </div>
+                                   </div>
+                               </div>
+                               <div class="row">
+                                   <div class="col-md-6 col-sm-6 col-xs-6">
+                                       <div class="form-group">
+                                           <label for="email">Email</label>
+                                        <input type="text" name="email" class="form-control" value="'.$user->getEmail().'">
+                                       </div>
+                                   </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                       <div class="form-group">
+                                           <label for="password">Mot de passe</label>
+                                        <input type="password" name="password" class="form-control" value="">
+                                       </div>
+                                   </div>
+                               </div>
+                               <input type="hidden" name="agent" value="'.$user->getId().'">
+                            </form>
+                           </div>
+                           <div class="modal-footer border-top-0 d-flex justify-content-center">
+                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                               <button type="submit" id="edit-btn-'.$user->getId().'" class="btn btn-warning">Modifier</button>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </td>
+            </tr>
+           ';
+           }
+           return new JsonResponse(['user' => $user->getId(), 'row' => $row]);
+        }elseif($request->isXmlHttpRequest() && $request->get('userId')){
+  
+            $user = $this->manager->getRepository(User::class)->find($request->get('userId'));
+            
+            $user->setFirstName($request->get('firstName'));
+            $user->setLastName($request->get('lastName'));
+            $user->setEmail($request->get('email'));
+
+            $password = $encoder->encodePassword($user,$request->get('password'));
+
+            $user->setEmail($request->get('email'));
+            $user->setPassword($password);
+
+            $this->manager->persist($user);
+            $this->manager->flush();
+
+            $users = $this->manager->getRepository(User::class)->findBy([], ['id' => 'DESC']);
+ 
+            $row = '';
+            foreach($users as $key => $user){
+
+                $row .= '
+               <tr id="tr-'.$user->getId().'">
+               <td>'.($key+1).'</td>
+               <td>'.$user->getFirstName().'</td>
+               <td>'.$user->getLastName().'</td>
+               <td>'.$user->getEmail().'</td>
+               <td >
+                   <a type="submit" id="btn-modify-'.$user->getId().'"
+                       class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
+                   <a type="submit" id="delete-'.$user->getId().'" class="btn btn-danger btn-sm"  data-toggle="modal"
+                       data-target="#modal-danger">Supprimer 
+                       <i class="fa fa-trash"></i></a>
+                       <div class="modal fade" id="modal_delete_'.$user->getId().'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                       <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+                               <div class="modal-header">
+                                   <h5 class="modal-title text-uppercase" style="color:#ffff;" >'.$user->getFirstName().' '.$user->getLastName().'</h5>
+                                   <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                       <span aria-hidden="true">&times;</span>
+                                   </a>
+                               </div>
+                               <div class="modal-body">
+                                   <p>Voulez-vous vraiment supprimer '.$user->getFirstName().' '.$user->getLastName().'? Toutes les données liées à cette entité seront définitivement supprimées!</p>
+                               </div>
+                               <div class="modal-footer">
+                                   <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
+                                   <a id="btn-delete-'.$user->getId().'" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div id="modal_edit_'.$user->getId().'" class="modal fade" id="form" tabindex="-1" role="dialog"
+                       aria-labelledby="exampleModalLabel" aria-hidden="true">
+                       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                           <div class="modal-content">
+                               <div class="modal-header border-bottom-0">
+                                   <h5 class="modal-title text-center" id="exampleModalLabel">Modifier une entité</h5>
+                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                       <span aria-hidden="true">&times;</span>
+                                   </button>
+                               </div>
+                               
+                               <div class="modal-body">
+                               <form id="edit_form_'.$user->getId().'">
+                                   <div class="row">
+                                       <div class="col-md-6 col-sm-6 col-xs-6">
+                                           <div class="form-group">
+                                               <label for="firstname">Nom</label>
+                                               <input type="text" name="firstName" class="form-control" value="'.$user->getFirstName().'">
+                                           </div>
+                                       </div>
+                                       <div class="col-md-6 col-sm-6 col-xs-6">
+                                           <div class="form-group">
+                                               <label for="lastname">Prénom</label>
+                                               <input type="text" name="lastName" class="form-control" value="'.$user->getLastName().'">
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="row">
+                                       <div class="col-md-6 col-sm-6 col-xs-6">
+                                           <div class="form-group">
+                                               <label for="email">Email</label>
+                                            <input type="text" name="email" class="form-control" value="'.$user->getEmail().'">
+                                           </div>
+                                       </div>
+                                       <div class="col-md-6 col-sm-6 col-xs-6">
+                                       <div class="form-group">
+                                           <label for="password">Mot de passe</label>
+                                        <input type="password" name="password" class="form-control" value="">
+                                       </div>
+                                   </div>
+                                   </div>
+                                   <input type="hidden" name="userId" value="'.$user->getId().'">
+                                </form>
+                               </div>
+                               <div class="modal-footer border-top-0 d-flex justify-content-center">
+                                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                   <button type="submit" id="edit-btn-'.$user->getId().'" class="btn btn-warning">Modifier</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </td>
+                </tr>
+               ';
+               }
+            return new JsonResponse(['user' => $user->getId(), 'row' => $row]);
+        }
+
+        return $this->render('backend/administrators/index.html.twig', [
+            'users' => $this->manager->getRepository(User::class)->findBy([], ['id' => 'DESC']),
+            'form' => $form->createView(),
+        ]);
+    }
+
+        /**
+     * @Route("/administrators/delete", name="administrators_remove")
+     */
+    public function administratorRemove(Request $request)
+    {  
+        if($request->isXmlHttpRequest() && $request->get('userId')){
+            $user = $this->manager->getRepository(User::class)->find($request->get('userId'));
+         
+            if($user->getId()){
+
+                $id = $user->getId();
+
+                $this->manager->remove($user);
+                $this->manager->flush();
+
+              return new JsonResponse(['user' => $id]);
+
+            }
+        }
+
+        return new Response('');
     }
 }
