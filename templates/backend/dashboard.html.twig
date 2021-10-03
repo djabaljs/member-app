@@ -34,12 +34,12 @@
 	
 		<div class="col-lg-4 col-6">
 			<!-- small box -->
-			<a href="{{path('agents')}}" >
+			<a href="{{path('members')}}" >
 			<div class="small-box bg-info">
 				<div class="inner">
-					<h3>{{agents|length}}</h3>
+					<h3>{{members|length}}</h3>
 
-					<p>Agents</p>
+					<p>Membres</p>
 				</div>
 				<div class="icon">
 					<i class="ion ion-bag"></i>
@@ -51,12 +51,12 @@
 		<!-- ./col -->
 		<div class="col-lg-4 col-6">
 			<!-- small box -->
-				<a href="{{path('departments')}}" >
+				<a href="{{path('sessions')}}" >
 			<div class="small-box bg-success">
 				<div class="inner">
-					<h3>{{departments|length}}</h3>
+					<h3>{{sessions|length}}</h3>
 
-					<p>Départements</p>
+					<p>Sessions</p>
 				</div>
 				<div class="icon">
 					<i class="ion ion-stats-bars"></i>
@@ -65,29 +65,7 @@
 			</a>
 		</div>
 		<!-- ./col -->
-		<div class="col-lg-4 col-6 ">
-			<!-- small box -->
-				<a href="{{path('departments')}}" >
-			<div class="small-box bg-warning">
-				<div class="inner">
-					<h3>{{services|length}}</h3>
-
-					<p>Services</p>
-				</div>
-				<div class="icon">
-					<i class="ion ion-person-add"></i>
-				</div>
-			</div>
-			</a>
-	</div>
-	<!-- /.row -->
 </div>
-<div class="row">
-    <div class="col-4"></div>
-    <div class="col-4"><img class="center-block img-fluid" src="{{asset('imgs/bar2.png')}}" /></div>
-    <div class="col-4"></div>
-  </div>
-
 <!-- /.row (main row) -->
 </div><!-- /.container-fluid -->
 

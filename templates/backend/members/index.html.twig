@@ -2,6 +2,7 @@
 {% block title %}{{ parent() }}-TELEPHONIQUE{% endblock %}
 {% block head %}
 {% block stylesheets %}
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css" rel="stylesheet"/>
 
 {% endblock %}
 {% endblock %}
@@ -15,7 +16,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Administrateurs</a></li>
+                    <li class="breadcrumb-item"><a href="#">Membres</a></li>
                     <li class="breadcrumb-item active">Dashboard</li>
                 </ol>
             </div><!-- /.col -->
@@ -40,7 +41,7 @@
             <div class="card card-outline card-info">
                 <div class="">
                     <div class="card-header">
-                        <h3 class="card-title">Liste des administrateurs</h3>
+                        <h3 class="card-title">Liste des membres</h3>
                     </div>
 
                     <table id="example1" class="table table-bordered table-striped">
@@ -49,92 +50,134 @@
                                 <th>N°</th>
                                 <th>Nom</th>
                                 <th>Prénom</th>
-                                <th>Email</th>
+                                <th>Date de naissance</th>
+                                <th>Sessions</th>
+                                <th>Postes</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="table-content">
-                            {% for user in  users %}
-                            <tr id="tr-{{user.id}}">
+                            {% for member in  members %}
+                            <tr id="tr-{{member.id}}">
                                 <td>{{ loop.index }}</td>
-                                <td>{{ user.firstname }}</td>
-                                <td>{{ user.lastname }}</td>
-                                <td>{{ user.email }}</td>
+                                <td>{{ member.firstname }}</td>
+                                <td>{{ member.lastname }}</td>
+                                <td>{{ member.birthDay }}</td>
                                 <td>
-                                    <a type="submit" id="btn-modify-{{user.id}}"
+                                 {% for post in member.posts %}
+                                  <p>{{post.name}}</p>
+                                 {% endfor %}
+                                </td>
+                                <td>
+                                  {% for session in member.sessions %}
+                                  <p>{{session.name}}</p>
+                                 {% endfor %}
+                                </td>
+                                <td>
+                                    <a type="submit" id="btn-modify-{{member.id}}"
                                         class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
-                                     <a type="submit" id="delete-{{user.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
+                                     <a type="submit" id="delete-{{member.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
                                         data-target="#modal-danger">Supprimer 
                                         <i class="fa fa-trash"></i></a>
 
                                 </td>
                             </tr>
-                              <div class="modal fade" id="modal_delete_{{user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal fade" id="modal_delete_{{member.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{user.firstName}} {{user.lastName}}</h5>
+                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{member.firstName}} {{member.lastName}}</h5>
                                             <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </a>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Voulez-vous vraiment supprimer {{user.firstName}} {{user.lastName}}? Toutes les données liées à ce agent seront définitivement supprimées!</p>
+                                            <p>Voulez-vous vraiment supprimer {{member.firstName}} {{member.lastName}}? Toutes les données liées à ce member seront définitivement supprimées!</p>
                                         </div>
                                         <div class="modal-footer">
                                             <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
-                                            <a id="btn-delete-{{user.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                                            <a id="btn-delete-{{member.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div id="modal_edit_{{user.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
+                            <div id="modal_edit_{{member.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header border-bottom-0">
-                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un administrateur</h5>
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un membre</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         
                                         <div class="modal-body">
-                                        <form id="edit_form_{{user.id}}">
+                                        <form id="edit_form_{{member.id}}">
                                             <div class="row">
                                                 <div class="col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-group">
                                                         <label for="firstname">Nom</label>
-                                                        <input type="text" name="firstName" class="form-control" value="{{user.firstName}}">
+                                                        <input type="text" name="firstName" class="form-control" value="{{member.firstName}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-group">
                                                         <label for="lastname">Prénom</label>
-                                                        <input type="text" name="lastName" class="form-control" value="{{user.lastName}}">
+                                                        <input type="text" name="lastName" class="form-control" value="{{member.lastName}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="form-group">
+                                                        <label for="birthDay">Date de naissance</label>
+                                                     <input type="date" name="birthDay" class="form-control" value="{{member.birthDay}}">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-group">
-                                                        <label for="email">Email</label>
-                                                     <input type="text" name="email" class="form-control" value="{{user.email}}">
+                                                        <label for="session">Session</label>
+                                                         <select class="form-control" id="session" name="session">
+                                                            {% for session in sessions %}
+                                                              {% for memberS in session.members %}
+                                                            {% if member.id == memberS.id %}
+                                                             <option value="{{session.id}}" selected>{{session.name}}</option>
+                                                             {% else %}
+                                                             <option value="{{session.id}}" >{{session.name}}</option>
+                                                               {% endif %}
+                                                             
+                                                         {% endfor %}
+                                                         {% endfor %}
+                                                         </select>
                                                     </div>
                                                 </div>
-                                                 <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <div class="col-md-6 col-sm-6 col-xs-6">
                                                     <div class="form-group">
-                                                        <label for="password">Mot de passe</label>
-                                                     <input type="password" name="password" class="form-control" value="">
+                                                        <label for="post">Poste</label>
+                                                          <select class="form-control" id="post" name="post">
+                                                            {% for post in posts %}
+                                                              {% for memberP in post.members %}
+                                                            {% if member.id == memberP.id %}
+                                                             <option value="{{post.id}}" selected>{{post.name}}</option>
+                                                             {% else %}
+                                                             <option value="{{post.id}}" >{{post.name}}</option>
+                                                               {% endif %}
+                                                             
+                                                         {% endfor %}
+                                                         {% endfor %}
+                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="userId" value="{{user.id}}">
+                                            <input type="hidden" name="member" value="{{member.id}}">
                                          </form>
                                         </div>
                                         <div class="modal-footer border-top-0 d-flex justify-content-center">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                            <button type="submit" id="edit-btn-{{user.id}}" class="btn btn-warning">Modifier</button>
+                                            <button type="submit" id="edit-btn-{{member.id}}" class="btn btn-warning">Modifier</button>
                                         </div>
                                     </div>
                                 </div>
@@ -155,7 +198,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter un administrateur</h5>
+                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter un membre</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -180,10 +223,35 @@
                     </div>
                 </div>
                  <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="birthDay">Date de naissance</label>
+                             {{ form_row(form.birthDay)
+                            }}
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="Email">Email</label>
-                            {{ form_row(form.email, {attr:{'class':'form-control','placeholder':'Email' }})
+                            <label for="session">Session</label>
+                            {{ form_row(form.session, {attr:{'class':'form-control','placeholder':'Session' }})
+                            }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="post">Poste</label>
+                            {{ form_row(form.post, {attr:{'class':'form-control','placeholder':'Poste' }})
+                            }}
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="birthDay">Date de naissance</label>
+                             {{ form_row(form.photoFile)
                             }}
                         </div>
                     </div>
@@ -201,8 +269,11 @@
 {% block javascripts %}
 <script src=" {{ asset("js/validate.js") }}"></script>
 <script src="{{ asset("js/sweetAlert.js") }}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script>
-
+ $('#member_birthDay').datepicker({
+            format: 'dd-mm-yyyy'
+});
     $.validator.setDefaults({
 		errorClass: 'help-block',
 		errorPlacement: function (error, element) {
@@ -262,11 +333,15 @@
             'lastName': {
                 required: false
             },
-            'email': {
-                required: false,
-                email: true,
+            'post': {
+                required: true,
+                number: true,
             },
-        
+          
+            'session': {
+                required: true,
+            }
+
         },
         messages: {
             'firstName': {
@@ -275,11 +350,13 @@
             'lastName': {
                 required: 'Prénom obligatoire'
             },
-            'email': {
-                required: 'Email obligatoire',
-                email: 'Entrer un email valide',
+            'post': {
+                required: 'Poste obligatoire',
             },
-            
+             'session': {
+                required: 'Session obligatoire',
+            },
+
         }
     });
     function addElement(){
@@ -288,11 +365,11 @@
         console.log($('#add_form').valid());
         if ($('#add_form').valid()) {
             $.ajax({
-                url: '{{ path("administrators") }}',
+                url: '{{ path("members") }}',
                 method: 'POST',
                 data: $('#add_form').serialize(),
                 success: function (response) {
-                    if (response.user) {
+                    if (response.member) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -309,7 +386,7 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Administrateur ajouté avec succès'
+                            title: 'Membre ajouté avec succès'
                         });
                         $("#example1 tbody").
                         html(response.row);
@@ -320,7 +397,7 @@
                         modifyFunction();
                         $('#add_form').trigger('reset');
 
-                }
+                    }
                 }
             })
         }
@@ -334,11 +411,11 @@
        
           if ($('#edit_form_'+id).valid()) {
             $.ajax({
-                url: '{{ path("administrators") }}',
+                url: '{{ path("members") }}',
                 method: 'POST',
                 data: $('#edit_form_'+id).serialize(),
                 success: function (response) {
-                    if (response.user) {
+                    if (response.member) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -355,7 +432,7 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Administrateur modifié avec succès'
+                            title: 'Membre modifié avec succès'
                         });
                        $("#example1 tbody").
                         html(response.row);
@@ -378,11 +455,11 @@
         var subStr = str.substr(11, 12);
          
             $.ajax({
-                url: '{{ path("administrators_remove") }}',
+                url: '{{ path("member_remove") }}',
                 method: 'POST',
-                data: {'userId': subStr},
+                data: {'member': subStr},
                 success: function (response) {
-                    if (response.user) {
+                    if (response.member) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -399,15 +476,16 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Administrateur supprimé avec succès'
+                            title: 'Membre supprimé avec succès'
                         });
                         
-                         $('#tr-'+response.user).remove();
+                         $('#tr-'+response.member).remove();
                     }
                 }
             })
     })
     }
+
 
     function group(){
     deleteFunction();

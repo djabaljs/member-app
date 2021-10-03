@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}ANNUAIRE{% endblock %}</title>
+    <title>{% block title %}Membre{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Tell the browser to be responsive to screen width -->
@@ -28,17 +28,18 @@
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css') }}">
     <!-- Google Font: Source Sans Pro -->
       <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}">
+      <link rel="stylesheet" href="{{asset('plugins/fontawesome-free/css/all.min.css')}}">
     <!-- DataTables -->
     <link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
     <link rel="stylesheet" href="{{asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
   <!-- Theme style -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    
     {% block stylesheets %}{% endblock %}
 </head>
 
 <body>
- <img class="img-fluid topHeader" src="{{asset('imgs/TopBackground.jpg')}}"/>
     <div class="wrapper">
 
         <!-- Navbar -->
@@ -50,11 +51,6 @@
                 </li>
             </ul>
 
-            <div class="row">
-             <div class="col-12">
-               <h6 class="text-center">ANNUAIRE TÉLÉPHONIQUE DE LA PRESIDENCE DE LA RÉPUBLIQUE</h6>
-             </div>
-            </div>
         </nav>
         <!-- /.navbar -->
         
@@ -62,8 +58,8 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{path('dashboard')}}" class="brand-link">
-                <img src="{{ asset("imgs/bar2.png") }}" width="100px" alt="amoirie" class="brand-image" style="opacity: .8">
-                <span class="brand-text font-weight-light">PRESIDENCE</span>
+                {# <img src="{{ asset("imgs/bar2.png") }}" width="100px" alt="amoirie" class="brand-image" style="opacity: .8"> #}
+                {# <span class="brand-text font-weight-light">PRESIDENCE</span> #}
             </a>
 
             <!-- Sidebar -->
@@ -97,91 +93,45 @@
                             </a>
                         </li>
                         <li class="nav-item has-treeview">
-                            <a href="{{path('agents')}}" class="nav-link ">
+                            <a href="{{path('members')}}" class="nav-link ">
                                 <i class="nav-icon fa fa-users"></i>
                                 <p>
-                                    Agents
+                                    Membres
                                     <i class="fas  right"></i>
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item has-treeview">
-                            <a href="{{path('entities')}}" class="nav-link">
+                            <a href="{{path('sessions')}}" class="nav-link">
                                 <i class="nav-icon fa fa-donate"></i>
                                 <p>
-                                    Entités
+                                    Sessions
                                     <i class="fas  right"></i>
                                 </p>
                             </a>
                         </li>
                            <li class="nav-item has-treeview">
-                            <a href="{{path('units')}}" class="nav-link">
+                            <a href="{{path('posts')}}" class="nav-link">
                                 <i class="nav-icon fa fa-map-marker"></i>
                                 <p>
-                                    Unités
+                                    Postes
                                     <i class="fas  right"></i>
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item has-treeview">
-                            <a href="{{path('directions')}}" class="nav-link">
+                            <a href="{{path('administrators')}}" class="nav-link">
                                 <i class="nav-icon fa fa-users   "></i>
                                 <p>
-                                    Directions
-                                </p>
-                            </a>
-                        </li>
-                         <li class="nav-item has-treeview">
-                            <a href="{{path('departments')}}" class="nav-link">
-                                <i class="nav-icon fa fa-cogs "></i>
-                                <p>
-                                    Départements
-                                    <i class="fas "></i>
-                                </p>
-                            </a>
-                        </li>
-                         <li class="nav-item has-treeview">
-                            <a href="{{path('fonctions')}}" class="nav-link">
-                                <i class="nav-icon fa fa-cogs "></i>
-                                <p>
-                                    Fonctions
-                                    <i class="fas "></i>
-                                </p>
-                            </a>
-                        </li>
-                          <li class="nav-item has-treeview">
-                            <a href="{{path('utilNumbers')}}" class="nav-link">
-                                <i class="nav-icon fa fa-book"></i>
-                                <p>
-                                    Numéros utiles
-                                    <i class="fas "></i>
-                                </p>
-                            </a>
-                        </li>
-                         <li class="nav-item has-treeview">
-                            <a href="{{path('phones')}}" class="nav-link">
-                                <i class="nav-icon fa fa-phone "></i>
-                                <p>
-                                    Numéros
-                                    <i class="fas "></i>
-                                </p>
-                            </a>
-                        </li>
-                         <li class="nav-item has-treeview">
-                            <a href="{{path('administrators')}}" class="nav-link">
-                                <i class="nav-icon fa fa-users "></i>
-                                <p>
                                     Administrateurs
-                                    <i class="fas "></i>
                                 </p>
                             </a>
-                        </li>
+
                         <li class="nav-item has-treeview">
                             <a href="{{path('app_logout')}}" class="nav-link">
-                                <i class="nav-icon fa fa-sign-out-alt "></i>
+                                <i class="nav-icon fa fa-logout   "></i>
                                 <p>
                                     Déconnexion
-                                    <i class="fas "></i>
                                 </p>
                             </a>
                         </li>
@@ -206,7 +156,7 @@
         <!-- /.content-wrapper -->
         <footer class="main-footer">
             <p class="text-center">
-                <strong>Copyright &copy; 2021-2022 <a style="color: #5fa53a;" href="">PRESIDENCE</a>.</strong>
+                <strong>Copyright &copy; 2021-2022 <a style="color: #5fa53a;" href="">Member</a>.</strong>
                 Tous les droits réservés.
             </p>
         </footer>
@@ -261,10 +211,12 @@
     <script src="{{asset('plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
     <script src="{{asset('plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
     <script src="{{ asset('dist/js/adminlte.js') }}"></script>
+    
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('dist/js/demo.js') }}"></script>
     {% block javascripts %}{% endblock %}
+    
     <script>
   $(function () {
     $("#example1").DataTable({

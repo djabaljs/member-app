@@ -2,16 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Unit;
-use App\Entity\User;
-use App\Entity\Agent;
-use App\Entity\Service;
-use App\Entity\Direction;
-use App\Entity\Department;
-use App\Entity\SpecificSearch;
-use App\Entity\UtilNumber;
-use App\Form\SpecificSearchType;
-use App\Repository\AgentRepository;
+use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,263 +13,66 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class UserController extends AbstractController
 {
 
-  private $manager;
+    private $manager;
 
-  public function __construct(EntityManagerInterface $entityManager)
-  {
-      $this->manager = $entityManager;
- 
-  }
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->manager = $entityManager;
+    }
 
     /**
      * @Route("/", name="user")
      */
     public function index(Request $request): Response
     {
-        $specificSearch = new SpecificSearch();
-
-        $form = $this->createForm(SpecificSearchType::class, $specificSearch);
-        $form->handleRequest($request);
-
-        return $this->render('frontend/index.html.twig', [
-            'form' => $form->createView(),
-            'utilNumbers' => $this->manager->getRepository(UtilNumber::class)->findAll()
-        ]);
-    }
-
-     /**
-     * @Route("/standard-search", name="standard_search")
-     */
-    public function standardSearch(Request $request, AgentRepository $agentRepository)
-    {   
-       if(preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $request->get('search'))  === 0  && $request->get('search') != ''){
-        $search = $request->get('search');
-         $agents = $agentRepository->findAgentByStandardCriteria($search);
-        
-         $content = '';
-         
-         foreach($agents as $agent){
-             $content .='<tr>';
-                $content .= '<td>'.$agent->getFirstName().' '.$agent->getLastName().'</td>';
-                $content .= '<td>'.$agent->getPost().'</td>';
-                $content .= '<td>'.$agent->getEmail().'</td>';
-                $content .= '<td>'.$agent->getFonction().'</td>';
-                $content .= '<td><a style="color: #ed8000; font-size: 16px" href = "mailto:'.$agent->getEmail().'"><i class="fa fa-envelope"></i></a></td>';
-
-            $content .='<tr>';
-             
-         }
-
-         return new JsonResponse(['content' => $content]);
-       }
-
-       return new Response('');
-    }
-
-         /**
-     * @Route("/specific-search", name="specific_search")
-     */
-    public function specificSearch(Request $request, AgentRepository $agentRepository)
-    {   
-        if(preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $request->get('search'))  === 0  && $request->get('search') != ''){
-        $search = $request->get('search');
-         $agents = $agentRepository->findAgentBySpecificCriteria($search);
-        
-         $content = '';
-         
-         foreach($agents as $agent){
-             $content .='<tr>';
-                $content .= '<td>'.$agent->getFirstName().' '.$agent->getLastName().'</td>';
-                $content .= '<td>'.$agent->getPost().'</td>';
-                $content .= '<td>'.$agent->getEmail().'</td>';
-                $content .= '<td>'.$agent->getFonction().'</td>';
-                $content .= '<td><a style="color: #ed8000; font-size: 16px"  href = "mailto:'.$agent->getEmail().'"><i class="fa fa-envelope"></i></a></td>';
-
-            $content .='<tr>';
-             
-         }
-
-         return new JsonResponse(['content' => $content]);
-       }
-
-       return new Response('');
-    }
-
-     /**
-     * @Route("/verify-email/{email}", name="user-email")
-     */
-    public function verifyAgentEmail(Request $request)
-    {
-        // $user = $this->getDoctrine()->getRepository(Applicant::class)->findOneBy(['email' => $email]);
-        $agent = $request->query->get('agent');
-
-        $agentExist = $this->getDoctrine()->getRepository(User::class)->findOneBy(['email' => $agent['email']]);
-
-        if ($agentExist) {
-            return new JsonResponse(['Cet email est déjà associé à un autre utilisateur!']);
-        } else {
-            return new JsonResponse(['']);
-        }
+        return $this->render('frontend/index.html.twig', []);
     }
 
     /**
-     * @Route("/verify-post/", name="user_post")
+     * @Route("/search", name="search")
      */
-    public function verifyAgentPost(Request $request)
+    public function search(Request $request)
     {
-        // $user = $this->getDoctrine()->getRepository(Applicant::class)->findOneBy(['email' => $email]);
-        $post = $request->get('post');
-  
-        $agentExist = $this->getDoctrine()->getRepository(Agent::class)->findOneBy(['post' => $post]);
+        if ($request->isXmlHttpRequest() && $request->get('matricule')) {
+ 
+            try {
+                $member = $this->manager->getRepository(Member::class)->findOneBy(['matricule' => $request->get('matricule')]);
+                $row = '';
+                $sessions = '';
+                $posts = '';
+                
+                foreach ($member->getSessions() as $session) {
+                    $sessions .= '<p>' . $session->getName() . '</p>';
+                }
+                foreach ($member->getPosts() as $post) {
+                    $posts .= '<p>' . $post->getName() . '</p>';
+                }
 
-        if ($agentExist) {
-            return new JsonResponse(['error' => 'Ce N° poste est déjà utilisé!']);
-        } else {
-            return new JsonResponse(['']);
+                $row .= '
+                    
+                        <div class="card">
+                            <div class="card-media">
+                              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-NfjcF_sUqB0Yqy-NJ_YXhu62SQffp85Kg&usqp=CAU" alt="photo" />
+                            </div>
+                            <div class="card-content">
+                             <h6>Nom : ' . $member->getFirstName() . '</h6>
+                             <h6>Prénom : ' . $member->getLastName() . '</h6>
+                             <h6>Date de naissance : ' . $member->getBirthDay() . '</h6>
+                             <h6>Sessions : ' . $sessions . '</h6>
+                             <h6>Postes : ' . $posts . '</h6>
+                            </div>
+                        </div>
+                    ';
+
+            return new JsonResponse(['row' => $row]);
+
+            } catch (\Exception $e) {
+                $row = '<h6 style="color: red">Matricule incorrecte</h6>';
+                return new JsonResponse(['row' => $row]);
+            }
+
         }
+
+        return new Response(null);
     }
-
-        /**
-     * Returns a JSON string with the neighborhoods of the City with the providen id.
-     * 
-     * @param Request $request
-     * @return JsonResponse
-     * @Route("/get-units-from-entity", name="get_units_from_entitys")
-     */
-    public function listUnitOfEntity(Request $request)
-    {
-        // Get Entity manager and repository
-        $unitRepo = $this->manager->getRepository(Unit::class);
-        // Search the neighborhoods that belongs to the city with the given id as GET parameter "cityid"
-        $units = $unitRepo->createQueryBuilder("u")
-            ->where("u.entity = :entityId")
-            ->setParameter("entityId", $request->get("entityId"))
-            ->getQuery()
-            ->getResult();
-        
-        // Serialize into an array the data that we need, in this case only name and id
-        // Note: you can use a serializer as well, for explanation purposes, we'll do it manually
-        $responseArray = array();
-        foreach($units as $unit){
-            $responseArray[] = array(
-                "id" => $unit->getId(),
-                "name" => $unit->getName()
-            );
-        }
-        
-        // Return array with structure of the neighborhoods of the providen city id
-        return new JsonResponse($responseArray);
-
-        // e.g
-        // [{"id":"3","name":"Treasure Island"},{"id":"4","name":"Presidio of San Francisco"}]
-    }
-
-      /**
-     * Returns a JSON string with the neighborhoods of the City with the providen id.
-     * 
-     * @param Request $request
-     * @return JsonResponse
-     * @Route("/get-directions-from-unit", name="get_directions_from_units")
-     */
-    public function listDirectionsOfUnit(Request $request)
-    {
-        // Get Entity manager and repository
-        $directionRepo = $this->manager->getRepository(Direction::class);
-        
-        // Search the neighborhoods that belongs to the city with the given id as GET parameter "cityid"
-        $directions = $directionRepo->createQueryBuilder("d")
-            ->where("d.unit = :unitId")
-            ->setParameter("unitId", $request->get("unitId"))
-            ->getQuery()
-            ->getResult();
-        
-        // Serialize into an array the data that we need, in this case only name and id
-        // Note: you can use a serializer as well, for explanation purposes, we'll do it manually
-        $responseArray = array();
-        foreach($directions as $direction){
-            $responseArray[] = array(
-                "id" => $direction->getId(),
-                "name" => $direction->getName()
-            );
-        }
-        
-        // Return array with structure of the neighborhoods of the providen city id
-        return new JsonResponse($responseArray);
-
-        // e.g
-        // [{"id":"3","name":"Treasure Island"},{"id":"4","name":"Presidio of San Francisco"}]
-    }
-
-      /**
-     * Returns a JSON string with the neighborhoods of the City with the providen id.
-     * 
-     * @param Request $request
-     * @return JsonResponse
-     * @Route("/get-departments-from-direction", name="get_departments_from_directions")
-     */
-    public function listDepartmentOfDirection(Request $request)
-    {
-        // Get Entity manager and repository
-        $departmentRepo = $this->manager->getRepository(Department::class);
-        
-        // Search the neighborhoods that belongs to the city with the given id as GET parameter "cityid"
-        $departments = $departmentRepo->createQueryBuilder("d")
-            ->where("d.direction = :directionId")
-            ->setParameter("directionId", $request->get("directionId"))
-            ->getQuery()
-            ->getResult();
-        
-        // Serialize into an array the data that we need, in this case only name and id
-        // Note: you can use a serializer as well, for explanation purposes, we'll do it manually
-        $responseArray = array();
-        foreach($departments as $department){
-            $responseArray[] = array(
-                "id" => $department->getId(),
-                "name" => $department->getName()
-            );
-        }
-        
-        // Return array with structure of the neighborhoods of the providen city id
-        return new JsonResponse($responseArray);
-
-        // e.g
-        // [{"id":"3","name":"Treasure Island"},{"id":"4","name":"Presidio of San Francisco"}]
-    }
-
-     /**
-     * Returns a JSON string with the neighborhoods of the City with the providen id.
-     * 
-     * @param Request $request
-     * @return JsonResponse
-     * @Route("/get-services-from-department", name="get_services_from_departments")
-     */
-    public function listServicesOfDepartment(Request $request)
-    {
-        // Get Entity manager and repository
-        $serviceRepo = $this->manager->getRepository(Service::class);
-        
-        // Search the neighborhoods that belongs to the city with the given id as GET parameter "cityid"
-        $services = $serviceRepo->createQueryBuilder("s")
-            ->where("s.department = :departmentId")
-            ->setParameter("departmentId", $request->get("departmentId"))
-            ->getQuery()
-            ->getResult();
-        
-        // Serialize into an array the data that we need, in this case only name and id
-        // Note: you can use a serializer as well, for explanation purposes, we'll do it manually
-        $responseArray = array();
-        foreach($services as $service){
-            $responseArray[] = array(
-                "id" => $service->getId(),
-                "name" => $service->getName()
-            );
-        }
-        
-        // Return array with structure of the neighborhoods of the providen city id
-        return new JsonResponse($responseArray);
-
-        // e.g
-        // [{"id":"3","name":"Treasure Island"},{"id":"4","name":"Presidio of San Francisco"}]
-    }
-
 }

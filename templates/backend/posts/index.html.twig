@@ -1,5 +1,5 @@
 {% extends "admin_template.html.twig" %}
-{% block title %}{{ parent() }}-TELEPHONIQUE{% endblock %}
+{% block title %}{{ parent() }} |POSTES{% endblock %}
 {% block head %}
 {% block stylesheets %}
 
@@ -15,7 +15,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Administrateurs</a></li>
+                    <li class="breadcrumb-item"><a href="#">Postes</a></li>
                     <li class="breadcrumb-item active">Dashboard</li>
                 </ol>
             </div><!-- /.col -->
@@ -29,7 +29,7 @@
     <div class="box-header">
         <h3 class="box-title">
             <div class="btn-group">
-                <button type="button" class="btn btn-block btn-success add_btn"><i
+                <button type="button" class="btn btn-block btn-success add_entity"><i
                         class="glyphicon glyphicon-save"></i>
                     Créer</button>
             </div>
@@ -40,7 +40,7 @@
             <div class="card card-outline card-info">
                 <div class="">
                     <div class="card-header">
-                        <h3 class="card-title">Liste des administrateurs</h3>
+                        <h3 class="card-title">Liste des postes</h3>
                     </div>
 
                     <table id="example1" class="table table-bordered table-striped">
@@ -48,93 +48,69 @@
                             <tr>
                                 <th>N°</th>
                                 <th>Nom</th>
-                                <th>Prénom</th>
-                                <th>Email</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="table-content">
-                            {% for user in  users %}
-                            <tr id="tr-{{user.id}}">
+                            {% for post in  posts %}
+                            <tr id="tr-{{post.id}}">
                                 <td>{{ loop.index }}</td>
-                                <td>{{ user.firstname }}</td>
-                                <td>{{ user.lastname }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>
-                                    <a type="submit" id="btn-modify-{{user.id}}"
+                                <td id="td-{{post.id}}">{{ post.name }}</td>
+                                <td >
+                                    <a type="submit" id="btn-modify-{{post.id}}"
                                         class="btn btn-success btn-sm">Modifier <i class="fa fa-edit"></i></a>
-                                     <a type="submit" id="delete-{{user.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
+                                    <a type="submit" id="delete-{{post.id}}" class="btn btn-danger btn-sm"  data-toggle="modal"
                                         data-target="#modal-danger">Supprimer 
                                         <i class="fa fa-trash"></i></a>
 
                                 </td>
                             </tr>
-                              <div class="modal fade" id="modal_delete_{{user.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                             <div class="modal fade" id="modal_delete_{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{user.firstName}} {{user.lastName}}</h5>
+                                            <h5 class="modal-title text-uppercase" style="color:#ffff;" >{{post.name}}</h5>
                                             <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </a>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Voulez-vous vraiment supprimer {{user.firstName}} {{user.lastName}}? Toutes les données liées à ce agent seront définitivement supprimées!</p>
+                                            <p>Voulez-vous vraiment supprimer {{post.name}}? Toutes les données liées à cette entité seront définitivement supprimées!</p>
                                         </div>
                                         <div class="modal-footer">
                                             <a href="#" class="btn btn-secondary" data-dismiss="modal" style="color:#fff;">Annuler</a>
-                                            <a id="btn-delete-{{user.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
+                                            <a id="btn-delete-{{post.id}}" class="btn btn-danger" style="color:#fff;">Supprimer</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div id="modal_edit_{{user.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
+                            <div id="modal_edit_{{post.id}}" class="modal fade" id="form" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header border-bottom-0">
-                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier un administrateur</h5>
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Modifier une post</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         
                                         <div class="modal-body">
-                                        <form id="edit_form_{{user.id}}">
+                                        <form id="edit_form_{{post.id}}" action="{{path('posts')}}">
                                             <div class="row">
-                                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <div class="col-md-12 col-sm-12 col-xs-12">
                                                     <div class="form-group">
-                                                        <label for="firstname">Nom</label>
-                                                        <input type="text" name="firstName" class="form-control" value="{{user.firstName}}">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-sm-6 col-xs-6">
-                                                    <div class="form-group">
-                                                        <label for="lastname">Prénom</label>
-                                                        <input type="text" name="lastName" class="form-control" value="{{user.lastName}}">
+                                                        <label for="name">Nom</label>
+                                                        <input type="text" name="name" id="name-{{post.id}}" class="form-control" value="{{post.name}}">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6 col-sm-6 col-xs-6">
-                                                    <div class="form-group">
-                                                        <label for="email">Email</label>
-                                                     <input type="text" name="email" class="form-control" value="{{user.email}}">
-                                                    </div>
-                                                </div>
-                                                 <div class="col-md-6 col-sm-6 col-xs-6">
-                                                    <div class="form-group">
-                                                        <label for="password">Mot de passe</label>
-                                                     <input type="password" name="password" class="form-control" value="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" name="userId" value="{{user.id}}">
+                                            <input type="hidden" name="post" value="{{post.id}}">
                                          </form>
                                         </div>
                                         <div class="modal-footer border-top-0 d-flex justify-content-center">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                            <button type="submit" id="edit-btn-{{user.id}}" class="btn btn-warning">Modifier</button>
+                                            <button type="submit" id="edit-btn-{{post.id}}" class="btn btn-warning">Modifier</button>
                                         </div>
                                     </div>
                                 </div>
@@ -150,43 +126,26 @@
     </div>
 </div>
 <!-- /.col-->
-   <div id="modal_add" class="modal fade" id="form" tabindex="-1" role="dialog"
+   <div id="modal_entity" class="modal fade" id="form" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter un administrateur</h5>
+                <h5 class="modal-title text-center" id="exampleModalLabel">Ajouter une entité</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            {{ form_start(form, {attr:{'id':'add_form' }})
+            {{ form_start(form, {attr:{'id':'add_entity_form' }})
             }}
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <label for="firstName">Nom</label>
-                            {{ form_row(form.firstName, {attr:{'class':'form-control','placeholder':'Nom' }})
+                            <label for="name">Nom</label>
+                            {{ form_row(form.name, {attr:{'class':'form-control','placeholder':'Nom' }})
                             }}
                         </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label for="lastName">Prénom</label>
-                            {{ form_row(form.lastName, {attr:{'class':'form-control','placeholder':'Prénom' }})
-                            }}
-                        </div>
-                    </div>
-                </div>
-                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label for="Email">Email</label>
-                            {{ form_row(form.email, {attr:{'class':'form-control','placeholder':'Email' }})
-                            }}
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="modal-footer border-top-0 d-flex justify-content-center">
@@ -197,40 +156,20 @@
         </div>
     </div>
 </div>
+</div>
 {% endblock %}
 {% block javascripts %}
 <script src=" {{ asset("js/validate.js") }}"></script>
 <script src="{{ asset("js/sweetAlert.js") }}"></script>
 <script>
 
-    $.validator.setDefaults({
-		errorClass: 'help-block',
-		errorPlacement: function (error, element) {
-			error.addClass("label");
-			error.css("background", "red", );
-			error.insertAfter(element.parent());
-		},
-		highlight: function (element, errorClass, validClass) {
-			$(element).parents(".row").addClass(errorClass);
-		},
-		unhighlight: function (element, errorClass, validClass) {
-			$(element).parent().next().remove();
-
-		}
-	});
-
-    $.validator.setDefaults({
-        debug: true,
-        success: "valid"
-    });
-
-
-    $('.add_btn').click(function () {
-        $('#modal_add').modal('show');
+    $('.add_entity').click(function () {
+        $('#modal_entity').modal('show');
     })
 
     function modifyFunction(){
     $( "[id^='btn-modify']" ).click(function(){
+        console.log(1);
         var str = $(this).attr("id");
         var subStr = str.substr(11, 12);
         $('#modal_edit_'+subStr).modal('show');
@@ -251,48 +190,16 @@
         success: "valid"
     });
 
-
-    var form = $('#add_form');
-
-    form.validate({
-        rules: {
-            'firstName': {
-                required: false
-            },
-            'lastName': {
-                required: false
-            },
-            'email': {
-                required: false,
-                email: true,
-            },
-        
-        },
-        messages: {
-            'firstName': {
-                required: 'Nom obligatoire'
-            },
-            'lastName': {
-                required: 'Prénom obligatoire'
-            },
-            'email': {
-                required: 'Email obligatoire',
-                email: 'Entrer un email valide',
-            },
-            
-        }
-    });
     function addElement(){
     $('.register').click(function (e) {
         e.preventDefault();
-        console.log($('#add_form').valid());
-        if ($('#add_form').valid()) {
+        if ($('#add_entity_form').valid()) {
             $.ajax({
-                url: '{{ path("administrators") }}',
+                url: '{{ path("posts") }}',
                 method: 'POST',
-                data: $('#add_form').serialize(),
+                data: $('#add_entity_form').serialize(),
                 success: function (response) {
-                    if (response.user) {
+                    if (response.post) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -309,18 +216,17 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Administrateur ajouté avec succès'
+                            title: 'Poste ajouté avec succès'
                         });
                         $("#example1 tbody").
                         html(response.row);
-                        
                         deleteFunction();
                         updateElement();
                         removeElement();
                         modifyFunction();
-                        $('#add_form').trigger('reset');
+                        $('#add_entity_form').trigger('reset');
 
-                }
+                    }
                 }
             })
         }
@@ -334,11 +240,11 @@
        
           if ($('#edit_form_'+id).valid()) {
             $.ajax({
-                url: '{{ path("administrators") }}',
+                url: '{{ path("posts") }}',
                 method: 'POST',
                 data: $('#edit_form_'+id).serialize(),
                 success: function (response) {
-                    if (response.user) {
+                    if (response.post) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -355,16 +261,10 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Administrateur modifié avec succès'
+                            title: 'Post modifié avec succès'
                         });
-                       $("#example1 tbody").
-                        html(response.row);
-
-                            deleteFunction();
-                            addElement();
-                            removeElement();
-                            modifyFunction();
-
+                       $('#td-'+response.session).text(response.name);
+                        
                     }
                 }
             })
@@ -376,13 +276,13 @@
     $("[id^=btn-delete-]").click(function(){
         var str = $(this).attr("id");
         var subStr = str.substr(11, 12);
-         
+       
             $.ajax({
-                url: '{{ path("administrators_remove") }}',
+                url: '{{ path("post_remove") }}',
                 method: 'POST',
-                data: {'userId': subStr},
+                data: {'post': subStr},
                 success: function (response) {
-                    if (response.user) {
+                    if (response.post) {
                         const Toast = Swal.mixin({
                             toast: true,
                             position: 'top',
@@ -399,11 +299,14 @@
 
                          Toast.fire({
                             icon: 'success',
-                            title: 'Administrateur supprimé avec succès'
+                            title: 'Poste supprimé avec succès'
                         });
                         
-                         $('#tr-'+response.user).remove();
+                         $('#tr-'+response.post).remove();
                     }
+                },
+                error: function(){
+                    alert('Une erreur s\'est produite lors de la suppression.');
                 }
             })
     })
@@ -419,6 +322,5 @@
 
     group();
 
-    
 </script>
 {% endblock %}

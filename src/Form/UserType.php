@@ -24,10 +24,6 @@ class UserType extends AbstractType
             ->add('lastName', TextType::class, [
                 'label' => false,
             ])
-            ->add('password', PasswordType::class, [
-                'label' => false
-            ])
-
         ;
     }
 

@@ -4,11 +4,42 @@
 
 {% block stylesheets %}
  <style>
+  .search{
+    width: 100%;
+    height: 100%;
+    margin-top: 5%;
+  }
+  .search form{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+  }
+  .search input{
+    width: 400px;
+  }
   #section_scroll{
   overflow-y: scroll;
-  height: 300px;
   scrollbar-color: rebeccapurple green;
   scrollbar-width: thin;
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  }
+
+  #section_scroll .card{
+    margin-top: 10px;
+    width: 350px;
+    padding: 10px;
+  }
+
+  #section_scroll .card-media{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+  }
+
+  #section_scroll .img{
+    width: 56.28%;
   }
  </style>
 {% endblock %}
@@ -16,115 +47,16 @@
 
 
 <div class="container">
-  <div class="row">
-    <div class="col-md-2 col-xs-12 col-sm-12">
-    
-     <div class="col-12 col-12 col-xs-12 col-sm-12" id="specific_search">
-     {{form_start(form)}}
-       <br/>
-       <div class="form-group">
-        {{ form_row(form.entity, {attr:{'class':'form-control'}})}}
-       </div>
-         <div class="form-group">
-        {{ form_row(form.unit, {attr:{'class':'form-control'}})}}
-       </div>
-         <div class="form-group">
-        {{ form_row(form.direction, {attr:{'class':'form-control'}})}}
-       </div>
-         <div class="form-group">
-        {{ form_row(form.department, {attr:{'class':'form-control'}})}}
-       </div>
-         <div class="form-group">
-        {{ form_row(form.fonction, {attr:{'class':'form-control'}})}}
-       </div>
-     {{form_end(form)}}
+  <h1 class="text-center" style="padding-top:50px;">Bienvenue sur la plateforme web de COGEP</h1 >
+  <div class="row search">
+    <div class="col-md-12">
+      <form>
+        <input type="text" name="search" id="matricule" class="form-control" placeholder="N° Matricule" />
+        <button type="button" id="btn-search" class="btn btn-success">Chercher</button>
+    </form>
     </div>
-    
-    <div>
-    <div class="col-12 col-xs-12 col-sm-12" id="standard_search">
-     <br/>
-     <input type="text" id="standard_input" placeholder="Rechercher par nom ou tout autre information..." class="form-control" />
-     <div id="resultSearch"></div>
-    </div>
-    <br>
-    <div class="col-md-12 col-xs-12 col-sm-12">
-     <button type="button" id="specific-search-btn" class="btn btn-success form-control">Recherche avancée</button>
-    </div>
-    <div class="col-12 col-12 col-xs-12 col-sm-12">
-     <button type="button" id="standard-search-btn" class="btn btn-success form-control">Recherche standard</button>
-    </div>
-   </div>
-     
-  </div>
-  <div class="col-md-7 col-xs-12 col-sm-12">
-    <section class="content" id="table_section">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card" id="section_scroll">
-              <div class="card-header">
-                <h3 class="card-title">Resultats des recherches</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table id="example2" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>Nom et prenoms</th>
-                    <th>N° Poste</th>
-                    <th>Email</th>
-                    <th>Fonction</th>
-                    <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody id="content">
-                  <tr>
-                  <td colspan="5" class="text-center">Aucun agent pour le moment  </td>
-                  </tr>
-                  </tbody>
-                  <tfoot>
-                  <tr>
-                   <th>Nom et prenoms</th>
-                    <th>N° Poste</th>
-                    <th>Email</th>
-                    <th>Fonction</th>
-                    <th>Action</th>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-      </div>
-      <!-- /.container-fluid -->
-    </section>
-  </div>
-  <div class="col-md-3 col-xs-12 col-sm-12">
-    <div class="content">
-      <div class="card" id="section_scroll">
-              <div class="card-header">
-                <h3 class="card-title">Numéro utiles</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                {% for utilNumber in utilNumbers %}
-              <div>
-                <h3 class="text-success"><strong>{{utilNumber.name}}:</strong></h3>
-                  {% for phone in utilNumber.phones %}
-                <h5 class="ml-3">
-                  {{phone.number}}
-                </h5>
-                  {% endfor %}
-              </div>
-              {% endfor %}
-              </div>
-              <!-- /.card-body -->
-            </div>
+    <div class="col-md-12">
+     <div id="section_scroll"></div>
     </div>
   </div>
 </div>
@@ -133,275 +65,22 @@
 {% block javascripts %}
  <script>
 
- function preg_match (regex, str) {
-  return (new RegExp(regex).test(str))
-}
-
-  $('#standard-search-btn').hide();
-  $('#specific_search').hide();
-  $('#specific-search-btn').click(function(){
-      $('#specific-search-btn').hide();
-      $('#standard-search-btn').show();
-      $('#specific_search').show();
-      $('#standard_search').hide();
-  })
-    $('#standard-search-btn').click(function(){
-      $('#specific-search-btn').show();
-      $('#standard-search-btn').hide();
-      $('#specific_search').hide();
-       $('#standard_search').show();
-  })
-
-      $('[id^=entity]').change(function () {
-        var unitSelector = $(this);
-        var entityText = $('#entity option:selected').text();
-
-        
-        // Request the neighborhoods of the selected city.
+   $('#btn-search').click(function () {
         $.ajax({
-            url: "{{ path('get_units_from_entitys') }}",
-            type: "GET",
-            dataType: "JSON",
-            data: {
-                entityId: unitSelector.val()
-            },
-            success: function (units) {
-                
-                var unitSelector = $("[id^=unit]");
-                // Remove current options
-                unitSelector.html('');
-                
-                // Empty value ...
-                unitSelector.append('<option value> Selectionnner une unite de ' + unitSelector.find("option:selected").text() + ' ...</option>');
-                
-                
-                $.each(units, function (key, unit) {
-                    unitSelector.append('<option value="' + unit.id + '">' + unit.name + '</option>');
-                });
-            },
-            error: function (err) {
-                console.log(err)
-                alert("An error ocurred while loading data ...");
-            }
-        });
-
-          $.ajax({
-          url: "{{ path('specific_search') }}",
+          url: "{{path('search')}}",
           type: "POST",
           data: {
-              'search': entityText
+              'matricule': $('#matricule').val()
           },
-          success: function (data) {
-          $('#table_section').show();
-          $('#content').html(data.content);
-
-          $('[id^=agent-detail]').click(function(){
-              var str = $(this).attr("id");
-              var subStr = str.substr(13, 14);
-              $('#modal_agent_'+subStr).modal('show');
-          })
-          }
-      });
-    });
-
-    $('[id^=unit]').change(function () {
-        var directionSelector = $(this);
-        var unitText = $('#unit option:selected').text();
-        // Request the neighborhoods of the selected city.
-        $.ajax({
-            url: "{{ path('get_directions_from_units') }}",
-            type: "GET",
-            dataType: "JSON",
-            data: {
-                unitId: directionSelector.val()
-            },
-            success: function (directions) {
-                var directionSelector = $("[id^=direction]");
-
-                directionSelector.html('');
-                // Empty value ...
-                directionSelector.append('<option value> Selectionnner une direction de ' + directionSelector.find("option:selected").text() + ' ...</option>');
-                
-                
-                $.each(directions, function (key, direction) {
-                    directionSelector.append('<option value="' + direction.id + '">' + direction.name + '</option>');
-                });
-            },
-            error: function (err) {
-                alert("An error ocurred while loading data ...");
-            }
-        });
-          $.ajax({
-          url: "{{ path('standard_search') }}",
-          type: "POST",
-          data: {
-              'search': unitText
+          success: function (response) {
+            console.log(response)
+            $("#section_scroll").html(response.row)
           },
-          success: function (data) {
-              $('#table_section').show();
-          $('#content').html(data.content);
-
-          $('[id^=agent-detail]').click(function(){
-              var str = $(this).attr("id");
-              var subStr = str.substr(13, 14);
-              $('#modal_agent_'+subStr).modal('show');
-          })
-          },
-          error: function (err) {
-              alert("An error ocurred while loading data ...");
-          }
-      });
-    });
-
-     $('[id^=direction]').change(function () {
-        var departmentSelector = $(this);
-        var directionText = $('#direction option:selected').text();
-        
-        // Request the neighborhoods of the selected city.
-        $.ajax({
-            url: "{{ path('get_departments_from_directions') }}",
-            type: "GET",
-            dataType: "JSON",
-            data: {
-                directionId: departmentSelector.val()
-            },
-            success: function (departments) {
-                var departmentSelector = $("[id^=department]");
-
-                // Remove current options
-                departmentSelector.html('');
-                
-                // Empty value ...
-                departmentSelector.append('<option value> Selectionnner un département de ' + departmentSelector.find("option:selected").text() + ' ...</option>');
-                
-                
-                $.each(departments, function (key, department) {
-                    departmentSelector.append('<option value="' + department.id + '">' + department.name + '</option>');
-                });
-            },
-            error: function (err) {
-                alert("An error ocurred while loading data ...");
-            }
-        });
-
-         $.ajax({
-          url: "{{ path('standard_search') }}",
-          type: "POST",
-          data: {
-              'search': directionText
-          },
-          success: function (data) {
-              $('#table_section').show();
-          $('#content').html(data.content);
-
-          $('[id^=agent-detail]').click(function(){
-              var str = $(this).attr("id");
-              var subStr = str.substr(13, 14);
-              $('#modal_agent_'+subStr).modal('show');
-          })
-          },
-          error: function (err) {
-              alert("An error ocurred while loading data ...");
-          }
-      });
-
-        $('[id^=department]').change(function () {
-        var serviceSelector = $(this);
-        var departmentText = $('#department option:selected').text();
-        
-        // Request the neighborhoods of the selected city.
-        $.ajax({
-            url: "{{ path('get_services_from_departments') }}",
-            type: "GET",
-            dataType: "JSON",
-            data: {
-                departmentId: serviceSelector.val()
-            },
-            success: function (services) {
-                var serviceSelector = $("[id^=fonction]");
-                // Remove current options
-                serviceSelector.html('');
-                
-                // Empty value ...
-                serviceSelector.append('<option value> Selectionnner une fonction de ' + serviceSelector.find("option:selected").text() + ' ...</option>');
-                
-                $.each(services, function (key, service) {
-                    serviceSelector.append('<option value="' + service.id + '">' + service.name + '</option>');
-                });
-            },
-            error: function (err) {
-                alert("An error ocurred while loading data ...");
-            }
-        });
-
-        $.ajax({
-          url: "{{ path('standard_search') }}",
-          type: "POST",
-          data: {
-              'search': departmentText
-          },
-          success: function (data) {
-              $('#table_section').show();
-          $('#content').html(data.content);
-
-          $('[id^=agent-detail]').click(function(){
-              var str = $(this).attr("id");
-              var subStr = str.substr(13, 14);
-              $('#modal_agent_'+subStr).modal('show');
-          })
-          },
-          error: function (err) {
-              alert("An error ocurred while loading data ...");
-          }
-         });
-        });
-	});
-
-   $('[id^=fonction]').change(function () {
-        var fonctionText = $('#fonction option:selected').text();
-        
-        $.ajax({
-          url: "{{ path('standard_search') }}",
-          type: "POST",
-          data: {
-              'search': fonctionText
-          },
-          success: function (data) {
-              $('#table_section').show();
-          $('#content').html(data.content);
-
-          $('[id^=agent-detail]').click(function(){
-              var str = $(this).attr("id");
-              var subStr = str.substr(13, 14);
-              $('#modal_agent_'+subStr).modal('show');
-          })
-          },
-          error: function (err) {
-              alert("An error ocurred while loading data ...");
+          error: function (){
+            alert("Matricule incorrecte !")
           }
          });
   	});
 
-    $('#standard_input').keyup(function(){
-
-     console.log($(this).val().match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/'))
-    $.ajax({
-        url: '{{path("standard_search")}}',
-        type: 'POST',
-        data: {'search': $(this).val()},
-        success: function(data){
-            $('#table_section').show();
-            $('#content').html(data.content);
-
-            $('[id^=agent-detail]').click(function(){
-                var str = $(this).attr("id");
-                var subStr = str.substr(13, 14);
-                $('#modal_agent_'+subStr).modal('show');
-            })
-        }
-     })
-    })
-
-    
  </script>
 {% endblock %} 
